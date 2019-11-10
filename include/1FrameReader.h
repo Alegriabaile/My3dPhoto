@@ -16,60 +16,26 @@ namespace m3d
         std::string dataDir;
         unsigned int state;
 
-        void readArgv(std::string argv1)
-        {
-            std::ifstream inFile( argv1);
-            if (!inFile)
-            {
-                LOG("FrameReader::readArgv", "argv file does not exist.");
-                exit(-1);
-            }
-            inFile>>dataDir>>state;
-            inFile.close();
-        }
+        void readArgv(std::string argv1);
 
-        void readDefaultIntrinsic(const std::string &paramDefault, m3d::IntrinsicD& intrinsicD)
-        {
-            double fx, fy, cx, cy;
+        void readDefaultIntrinsic(const std::string &paramDefault, m3d::IntrinsicD& intrinsicD);
 
-            std::ifstream inFile(paramDefault);
-            if (!inFile)
-            {
-                LOG("FrameReader::readDefaultIntrinsic", "paramDefault file does not exist.");
-                exit(-1);
-            }
-            inFile>> fx>> fy>> cx>> cy;
-            inFile.close();
+        void readImage(const std::string& imageFileName, cv::Mat& image);
+        void readImages(const std::vector<std::string>& imageFileNames, std::vector<m3d::Frame> &Frames);
 
-            intrinsicD.setIntrinsic(fx, fy, cx, cy);
-        }
-        void readParameters(const std::string &paramFileName, m3d::IntrinsicD &intrinsicD, m3d::ExtrinsicD &extrinsicD)
-        {
+        void readDepth(const std::string& depthFileName, m3d::Frame &frame);
+        void readDepths(const std::vector<std::string>& depthFileNames, std::vector<m3d::Frame> &Frames);
 
-        }
+        void readParameter(const std::string &paramFileName, m3d::Frame &frame);
+        void readParameters(const std::vector<std::string>& paramFileNames,  m3d::IntrinsicD &defaultIntrinsicD, std::vector<m3d::Frame> &Frames);
 
-        void readData(std::string argv1, std::vector<m3d::Frame> &frames)
-        {
-            readArgv(argv1);
+        void readData(std::string argv1, std::vector<m3d::Frame> &frames);
 
-            std::string paramDefault;
-            std::vector<std::string> imageFileNames, depthFileNames, paramFileNames;
-
-            FileNameExtractor fileNameExtractor(dataDir, imageFileNames, depthFileNames, paramFileNames, paramDefault);
-
-            m3d::IntrinsicD intrinDefault;
-            readDefaultIntrinsic(paramDefault, intrinDefault);
-
-
-
-        }
 
     public:
-        FrameReader(std::string argv1, std::vector<m3d::Frame> &frames)
-        {
-            readData(argv1, frames);
-        }
+        FrameReader(std::string argv1, std::vector<m3d::Frame> &frames);
 
+        ~FrameReader();
 
     };
 

@@ -46,13 +46,31 @@ set_target_properties(glad PROPERTIES COMPILE_FLAGS "-O2 -DNDEBUG")
 target_include_directories(glad PRIVATE 3rd/glad/include)
 
 
+# ==============================================================================
+# m3dio
+# ==============================================================================
+# - internal by default
+# ==============================================================================
+file(GLOB M3D_IO_SRCS
+        src/1Logger.cpp
+        src/1FrameReader.cpp)
+
+add_library(m3d_io STATIC ${M3D_IO_SRCS})
+
+set_target_properties(m3d_io PROPERTIES COMPILE_FLAGS "-O2 -DNDEBUG")
+
+
 
 # ==============================================================================
 # source file include environments.
 include_directories("3rd/glad/include")
-include_directories(${PROJECT_SOURCE_DIR}/include)
+#include_directories(${PROJECT_SOURCE_DIR}/include)
+include_directories("include")
+include_directories("3rd/GMS-Feature-Matcher/include")
 
 
-# ==============================================================================
-# set subdir to add exe
-add_subdirectory(debug/)
+
+
+
+
+add_subdirectory("debug/")

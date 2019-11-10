@@ -1,4 +1,14 @@
+# unit test
+add_subdirectory("unit_test")
 
-add_executable(testCmake testCmake.cpp)
-target_link_libraries(testCmake ${OpenCV_LIBS})
-#set_property(TARGET testCmake PROPERTY FOLDER debug/)
+
+
+
+
+add_executable(debug2FeatureExtractor debug2FeatureExtractor.cpp)
+target_link_libraries(debug2FeatureExtractor m3d_io ${OpenCV_LIBS})
+
+
+
+add_executable(debugCurrent debugCurrent.cpp)
+target_link_libraries(debugCurrent m3d_io ${OpenCV_LIBS})

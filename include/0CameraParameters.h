@@ -44,6 +44,15 @@ namespace m3d
             for(int i=0; i<4; ++i)
                 intri_d[i] = intri_c[i];
         }
+
+        void setIntrinsic(T _intrinsic_c[4], T _intrinsic_d[4])
+        {
+            for(int i=0; i<4; ++i)
+                intri_c[i] = _intrinsic_c[i];
+            for(int i=0; i<4; ++i)
+                intri_d[i] = _intrinsic_d[i];
+        }
+
         T& fx_c(){return intri_c[0];}
         T& fy_c(){return intri_c[1];}
         T& ppx_c(){return intri_c[2];}

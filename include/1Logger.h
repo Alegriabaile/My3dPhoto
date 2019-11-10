@@ -28,6 +28,15 @@ namespace m3d
             //file operations
             //todo
         }
+        void setRootDir(const std::string& rootDir_)
+        {
+            rootDir.assign(rootDir_);
+            if(rootDir.empty() )
+                return;
+
+            //file operations
+            //todo
+        }
 
         //log
         void operator()(const std::string& label, const std::string& msg)
@@ -53,9 +62,7 @@ namespace m3d
 
     };
 
-    std::string Logger::rootDir = std::string();
-    Logger LOG("");
-
+    extern Logger LOG;
 }
 
 #endif //MY3DPHOTO_0LOGGER_H

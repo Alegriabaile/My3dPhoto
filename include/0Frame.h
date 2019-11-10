@@ -20,6 +20,10 @@ namespace m3d
     class Frame
     {
     public:
+        std::string imageFileName;
+        std::string depthFileName;
+        std::string paramFileName;
+
         State state;
         IntrinsicD intrinsicD;
         ExtrinsicD extrinsicD;
