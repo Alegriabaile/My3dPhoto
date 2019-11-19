@@ -25,7 +25,7 @@ namespace m3d
         std::string paramFileName;
 
         State state;
-        IntrinsicD intrinsicD;
+        static IntrinsicD intrinsicD;
         ExtrinsicD extrinsicD;
 
         cv::Mat image, depth, disparity;

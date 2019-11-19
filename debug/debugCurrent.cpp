@@ -5,9 +5,10 @@
 //
 // Created by ale on 19-11-8.
 //
-
+#include "0m3d.h"
 #include "1FrameReader.h"
 #include "2FeatureExtractor.h"
+#include "3FeatureMatcher.h"
 
 int main(int argc, char** argv)
 {
@@ -28,6 +29,8 @@ int main(int argc, char** argv)
 
     //robustly match keypoints of image pairs.
     //todo
+    m3d::Graph graph;
+    m3d::FeatureMatcher::matchFrames(frames, graph);
 
     //vertice and edge ------> graph ------> initial global pose
     //todo

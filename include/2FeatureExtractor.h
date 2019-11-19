@@ -39,7 +39,7 @@ namespace m3d
 
             if(state.id == 0)
             {
-                cv::Ptr<cv::ORB> orb = cv::ORB::create(10000);
+                cv::Ptr<cv::ORB> orb = cv::ORB::create(1000);
                 orb->setFastThreshold(0);
                 orb->detectAndCompute(image, mask, keypoints, descriptor);
             }

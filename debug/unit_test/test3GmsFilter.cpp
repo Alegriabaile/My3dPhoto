@@ -10,9 +10,14 @@ void GmsMatch(Mat &img1, Mat &img2);
 Mat DrawInlier(Mat &src1, Mat &src2, vector<KeyPoint> &kpt1, vector<KeyPoint> &kpt2, vector<DMatch> &inlier, int type);
 
 void runImagePair() {
-    Mat img1 = imread("data/01.jpg");
-    Mat img2 = imread("data/02.jpg");
+//    Mat img1 = imread("data/01.jpg");
+//    Mat img2 = imread("data/02.jpg");
 
+    Mat img1 = imread("data/1000.jpg");
+    Mat img2 = imread("data/1001.jpg");
+
+    resize(img1, img1, img1.size()/4);
+    resize(img2, img2, img2.size()/4);
     GmsMatch(img1, img2);
 }
 
@@ -54,9 +59,14 @@ void GmsMatch(Mat &img1, Mat &img2) {
     }
 
     // draw matching
-    Mat show = DrawInlier(img1, img2, kp1, kp2, matches_gms, 1);
-    imshow("show", show);
-    waitKey();
+    Mat show1, show2;
+//    = DrawInlier(img1, img2, kp1, kp2, matches_gms, 1);
+    cv::drawMatches(img1, kp1, img2, kp2, matches_gms, show1);
+    imshow("show", show1);
+    cv::drawMatches(img1, kp1, img2, kp2, matches_all, show2);
+    imshow("show2", show2);
+    while( waitKey() != 'q')
+        ;
 }
 
 Mat DrawInlier(Mat &src1, Mat &src2, vector<KeyPoint> &kpt1, vector<KeyPoint> &kpt2, vector<DMatch> &inlier, int type) {
@@ -72,7 +82,7 @@ Mat DrawInlier(Mat &src1, Mat &src2, vector<KeyPoint> &kpt1, vector<KeyPoint> &k
         {
             Point2f left = kpt1[inlier[i].queryIdx].pt;
             Point2f right = (kpt2[inlier[i].trainIdx].pt + Point2f((float)src1.cols, 0.f));
-            line(output, left, right, Scalar(0, 255, 255));
+            line(output, left, right, Scalar(0, 255, 255), 3);
         }
     }
     else if (type == 2)
@@ -81,7 +91,7 @@ Mat DrawInlier(Mat &src1, Mat &src2, vector<KeyPoint> &kpt1, vector<KeyPoint> &k
         {
             Point2f left = kpt1[inlier[i].queryIdx].pt;
             Point2f right = (kpt2[inlier[i].trainIdx].pt + Point2f((float)src1.cols, 0.f));
-            line(output, left, right, Scalar(255, 0, 0));
+            line(output, left, right, Scalar(255, 0, 0), 3);
         }
 
         for (size_t i = 0; i < inlier.size(); i++)

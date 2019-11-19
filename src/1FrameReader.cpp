@@ -120,27 +120,30 @@ void FrameReader::readParameters(const std::vector<std::string> &paramFileNames,
 {
     for(unsigned int i=0; i<frames.size(); ++i)
     {
-        double colorh = frames[i].image.rows;
-        double colorw = frames[i].image.cols;
-        double depthh = frames[i].depth.rows;
-        double depthw = frames[i].depth.cols;
+        if(i == 0)
+        {
+            double colorh = frames[i].image.rows;
+            double colorw = frames[i].image.cols;
+            double depthh = frames[i].depth.rows;
+            double depthw = frames[i].depth.cols;
 
-        //0, 1, 2, 3: fx, fy, cx, cy
-        double *intri = defaultIntrinsicD.intrinsic_c();
+            //0, 1, 2, 3: fx, fy, cx, cy
+            double *intri = defaultIntrinsicD.intrinsic_c();
 
-        double c[4], d[4];
+            double c[4], d[4];
 
-        c[0] = intri[0]*colorw/2/intri[2];//fx
-        c[1] = intri[1]*colorh/2/intri[3];//fy
-        c[2] = colorw/2;//cx
-        c[3] = colorh/2;//cy
+            c[0] = intri[0]*colorw/2/intri[2];//fx
+            c[1] = intri[1]*colorh/2/intri[3];//fy
+            c[2] = colorw/2;//cx
+            c[3] = colorh/2;//cy
 
-        d[0] = intri[0]*depthw/2/intri[2];//fx
-        d[1] = intri[1]*depthh/2/intri[3];//fy
-        d[2] = depthw/2;//cx
-        d[3] = depthh/2;//cy
+            d[0] = intri[0]*depthw/2/intri[2];//fx
+            d[1] = intri[1]*depthh/2/intri[3];//fy
+            d[2] = depthw/2;//cx
+            d[3] = depthh/2;//cy
 
-        frames[i].intrinsicD.setIntrinsic(c, d);
+            Frame::intrinsicD.setIntrinsic(c, d);
+        }
 
         readParameter(paramFileNames[i], frames[i]);
     }
@@ -153,7 +156,7 @@ void FrameReader::readData(std::string argv1, std::vector<m3d::Frame> &frames)
     std::string paramDefault;
     std::vector<std::string> imageFileNames, depthFileNames, paramFileNames;
 
-    FileNameExtractor fileNameExtractor(dataDir, imageFileNames, depthFileNames, paramFileNames, paramDefault);
+    FileNameExtractor fileNameExtractor(dataDir, imageFileNames, depthFileNames, paramFileNames, paramDefault, state);
 
     m3d::IntrinsicD intrinDefault;
     readDefaultIntrinsic(paramDefault, intrinDefault);
