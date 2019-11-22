@@ -42,6 +42,7 @@ namespace m3d
         virtual ~Frame() {};
     };
 
+
 }
 
 #endif //MY3DPHOTO_0FRAME_H

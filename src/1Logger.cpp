@@ -4,7 +4,8 @@
 
 #include "1Logger.h"
 
-using namespace m3d;
-
-std::string Logger::rootDir = std::string();
-Logger LOG("");
+namespace m3d
+{
+    std::string Logger::rootDir = std::string();
+    Logger LOG("");
+}

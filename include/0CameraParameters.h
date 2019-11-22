@@ -57,8 +57,13 @@ namespace m3d
         T& fy_c(){return intri_c[1];}
         T& ppx_c(){return intri_c[2];}
         T& ppy_c(){return intri_c[3];}
+        T& fx_d(){return intri_d[0];}
+        T& fy_d(){return intri_d[1];}
+        T& ppx_d(){return intri_d[2];}
+        T& ppy_d(){return intri_d[3];}
 
         T* intrinsic_c(){ return intri_c;}
+        T* intrinsic_d(){ return intri_d;}
 
     };
     typedef Intrinsic<double> IntrinsicD;

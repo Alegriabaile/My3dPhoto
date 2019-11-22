@@ -24,8 +24,10 @@ namespace m3d
         std::size_t mNbSets;
 
     public:
-        DisjointSets(std::size_t size) : mNodes(size), mNbSets(size)
+        void resize(std::size_t size)
         {
+            mNodes.resize(size);
+            mNbSets = size;
             for (auto i = std::size_t(0); i < mNodes.size(); ++i)
             {
                 auto& node = mNodes[i];
@@ -33,6 +35,10 @@ namespace m3d
                 node.rank = 0;
                 node.size = 1;
             }
+        }
+        DisjointSets(std::size_t size)
+        {
+            resize(size);
         }
 
         std::size_t Find(std::size_t x) const

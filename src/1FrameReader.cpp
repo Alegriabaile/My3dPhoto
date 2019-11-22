@@ -1,7 +1,7 @@
 //
 // Created by ale on 19-11-8.
 //
-
+#include "0m3d.h"
 #include "1FrameReader.h"
 
 using namespace m3d;
@@ -90,8 +90,8 @@ void FrameReader::readDepth(const std::string &depthFileName, m3d::Frame &frame)
         {
             for(unsigned int w=0; w<dTmp.cols; w++)
             {
-                unsigned int d = dTmp.ptr<uchar>(h)[w*channels_];
-                frame.depth.at<float>(h,w) = float(d);
+                float d = dTmp.ptr<ushort>(h)[w];
+                frame.depth.at<float>(h,w) = d;
             }
         }
         frame.disparity = 1/frame.depth;

@@ -6,7 +6,7 @@
 #define MY3DPHOTO_3FEATUREMATCHER_H
 
 #include "0m3d.h"
-#include "gms_matcher.h"
+#include "gms_matcher_prevent_pcl_ambiguous.h"
 
 namespace m3d
 {
@@ -16,6 +16,8 @@ namespace m3d
     private:
         static void matchFeaturePoint(const Frame& frame1, const Frame& frame2, std::size_t src, std::size_t dst, Edge & edge)
         {
+            using namespace std;
+            using namespace cv;
             const Mat &d1 = frame1.descriptor;
             const Mat &d2 = frame2.descriptor;
             vector<DMatch> matches_all;
@@ -36,8 +38,8 @@ namespace m3d
             cout << "FeatureMatcher::matchFeaturePoint(): "<<endl;
             cout<<"\t\t"<<src<<", "<<dst<<"\t all, inliers:  " <<matches_all.size()<<", "<< num_inliers <<endl;
 
-            edge.costs[0] = num_inliers;
-            edge.costs[1] = matches_all.size();
+            edge.matches[0] = num_inliers;
+            edge.matches[1] = matches_all.size();
 
             edge.src = src;
             edge.dst = dst;

@@ -16,6 +16,16 @@ find_package(OpenCV REQUIRED)
 set(EXECUTABLE_OUTPUT_PATH ${PROJECT_SOURCE_DIR}/bin)
 set(LIBRARY_OUTPUT_PATH  ${PROJECT_SOURCE_DIR}/lib)
 
+## ==============================================================================
+## pcl
+## ==============================================================================
+## - external by default
+## ==============================================================================
+#find_package(PCL REQUIRED)#COMPONENTS common io)# visualization)# COMPONENTS common io visualization)
+#include_directories(${PCL_INCLUDE_DIRS})
+
+
+
 # ==============================================================================
 # eigen3
 # ==============================================================================
@@ -30,41 +40,43 @@ include_directories(${PROJECT_SOURCE_DIR}/3rd/eigen3)
 # ==============================================================================
 find_package(glfw3 3.2 REQUIRED)
 
-
 # ==============================================================================
 # glad
 # ==============================================================================
 # - internal by default
 # ==============================================================================
-file(GLOB GLAD_SRCS
-        3rd/glad/src/glad.c)
+#file(GLOB GLAD_SRCS
+#        3rd/glad/src/glad.c)
+#
+#add_library(glad STATIC ${GLAD_SRCS})
+##set_target_properties(glad PROPERTIES COMPILE_FLAGS "-O2 -DNDEBUG")
+## CMakeLists file include environments.
+#target_include_directories(glad PRIVATE 3rd/glad/include)
 
-add_library(glad STATIC ${GLAD_SRCS})
 
-set_target_properties(glad PROPERTIES COMPILE_FLAGS "-O2 -DNDEBUG")
-# CMakeLists file include environments.
-target_include_directories(glad PRIVATE 3rd/glad/include)
 
 
 # ==============================================================================
-# m3dio
+# m3d base: basic data structure, io...
 # ==============================================================================
 # - internal by default
 # ==============================================================================
-file(GLOB M3D_IO_SRCS
+file(GLOB M3D_BASE_SRCS
+        src/0m3d.cpp
         src/1Logger.cpp
         src/1FrameReader.cpp)
+add_library(m3dbase STATIC ${M3D_BASE_SRCS})
+target_include_directories(m3dbase PRIVATE include)
 
-add_library(m3d_io STATIC ${M3D_IO_SRCS})
 
-set_target_properties(m3d_io PROPERTIES COMPILE_FLAGS "-O2 -DNDEBUG")
+file(GLOB M3D_OVERLAP_SRCS
+        src/4OverlapEstimator.cpp)
 
 
 
 # ==============================================================================
 # source file include environments.
 include_directories("3rd/glad/include")
-#include_directories(${PROJECT_SOURCE_DIR}/include)
 include_directories("include")
 include_directories("3rd/GMS-Feature-Matcher/include")
 

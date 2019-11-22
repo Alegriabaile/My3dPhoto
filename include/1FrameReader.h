@@ -5,7 +5,7 @@
 #ifndef MY3DPHOTO_1FRAMEREADER_H
 #define MY3DPHOTO_1FRAMEREADER_H
 
-#include "0Frame.h"
+#include "0m3d.h"
 #include "1FileNameExtractor.h"
 
 namespace m3d
