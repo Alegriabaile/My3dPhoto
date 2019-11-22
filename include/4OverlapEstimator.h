@@ -5,7 +5,6 @@
 #ifndef MY3DPHOTO_4OVERLAPESTIMATOR_H
 #define MY3DPHOTO_4OVERLAPESTIMATOR_H
 
-#include "opencv2/opencv.hpp"
 #include "0m3d.h"
 
 namespace m3d

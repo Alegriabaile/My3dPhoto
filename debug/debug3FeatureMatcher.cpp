@@ -14,8 +14,7 @@
 #include "2FeatureExtractor.h"
 #include "3FeatureMatcher.h"
 
-
-void DrawMatches(const Mat &src1, const Mat &src2, const vector<KeyPoint> &kpt1, const vector<KeyPoint> &kpt2, Mat& output, std::size_t type = 1);
+void DrawMatches(const cv::Mat &src1, const cv::Mat &src2, const std::vector<cv::KeyPoint> &kpt1, const std::vector<cv::KeyPoint> &kpt2, cv::Mat& output, std::size_t type = 1);
 int main(int argc, char** argv)
 {
     using namespace cv;
@@ -80,11 +79,14 @@ int main(int argc, char** argv)
     return 0;
 }
 
-void DrawMatches(const Mat &src1, const Mat &src2, const vector<KeyPoint> &kpt1, const vector<KeyPoint> &kpt2, Mat& output, std::size_t type)
+void DrawMatches(const cv::Mat &src1, const cv::Mat &src2, const std::vector<cv::KeyPoint> &kpt1, const std::vector<cv::KeyPoint> &kpt2, cv::Mat& output, std::size_t type)
 {
     const size_t thick_line = 3;
     const size_t radius_circle = 3;
     const size_t thick_circle = 3;
+
+    using namespace cv;
+    using namespace std;
     RNG rng;
     if(src1.rows > src1.cols)
     {

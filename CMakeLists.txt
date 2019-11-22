@@ -21,8 +21,8 @@ set(LIBRARY_OUTPUT_PATH  ${PROJECT_SOURCE_DIR}/lib)
 ## ==============================================================================
 ## - external by default
 ## ==============================================================================
-#find_package(PCL REQUIRED)#COMPONENTS common io)# visualization)# COMPONENTS common io visualization)
-#include_directories(${PCL_INCLUDE_DIRS})
+find_package(PCL REQUIRED)#COMPONENTS common io)# visualization)# COMPONENTS common io visualization)
+include_directories(${PCL_INCLUDE_DIRS})
 
 
 
@@ -69,8 +69,9 @@ add_library(m3dbase STATIC ${M3D_BASE_SRCS})
 target_include_directories(m3dbase PRIVATE include)
 
 
-file(GLOB M3D_OVERLAP_SRCS
-        src/4OverlapEstimator.cpp)
+file(GLOB M3D_INITIALIZER_SRCS
+        src/4OverlapEstimator.cpp
+        src/4GraphInitializer.cpp)
 
 
 
