@@ -95,7 +95,7 @@ namespace m3d
                 if(maxSz < nodeSz)
                 {
                     maxSz = nodeSz;
-                    maxParent = i;
+                    maxParent = Find(i);
                 }
             }
 

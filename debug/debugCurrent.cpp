@@ -46,7 +46,6 @@ void run(int argc, char** argv)
 
     //vertice and edge ------> graph ------> initial global pose
     m3d::OverlapEstimator overlapEstimator(frames, graph);
-    m3d::GraphInitializer graphInitializer(frames, graph);
 
     //debug...
     size_t sz = graph.edges.size();
@@ -59,7 +58,7 @@ void run(int argc, char** argv)
         cout<<i<<" th edge: "<<act<<", "<<gmsInliersNo<<", "<<deltaRotation<<endl;
     }
 
-
+    m3d::GraphInitializer graphInitializer(frames, graph);
 
     //no linear optimization of global pose
     //todo

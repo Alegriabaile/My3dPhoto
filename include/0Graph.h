@@ -40,6 +40,7 @@ namespace m3d
     public:
         std::vector<Edge> edges;
         std::vector<bool> activatedEdges;
+        std::vector<bool> activatedEdgesMst;
         std::vector<bool> activatedFrames;
         m3d::DisjointSets disjointSets;
 
@@ -48,6 +49,7 @@ namespace m3d
         {
             edges.clear();
             activatedEdges.clear();
+            activatedEdgesMst.clear();
         }
 
         //resize the sz as frames.size();
@@ -56,8 +58,9 @@ namespace m3d
         {
             edges.clear();
             activatedEdges.clear();
+            activatedEdgesMst.clear();
 
-            activatedFrames.resize(sz);
+            activatedFrames.resize(sz, false);
             disjointSets.resize(sz);
         }
 
@@ -65,6 +68,7 @@ namespace m3d
         {
             edges.push_back(edge);
             activatedEdges.push_back(activeEdge);
+            activatedEdgesMst.push_back(false);
         }
     };
 

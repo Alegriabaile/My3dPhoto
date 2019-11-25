@@ -20,7 +20,9 @@ namespace m3d
         void ActivateEdges();
 
         //Generate minimum spanning tree by Prim's thought.
-        void GenMstViaPrim(std::set<size_t> &Vs, std::vector<m3d::Edge> &Es);
+        void GenMstViaPrim(const std::set<size_t> &Vs, std::vector<m3d::Edge> &Es);
+        void GenMstViaPrim(const std::vector<bool> &activatedFrames, const std::vector<bool> &activatedEdges, const std::vector<m3d::Edge> &edges,
+                                             std::vector<bool> &activatedEdgesMst);
         void GenInitViaMst();
 
     public:
