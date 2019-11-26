@@ -11,14 +11,13 @@ target_link_libraries(debug3FeatureMatcher ${OpenCV_LIBS} m3dbase)
 add_executable(debug4OverlapEstimator debug4OverlapEstimator.cpp ${M3D_INITIALIZER_SRCS})
 target_link_libraries(debug4OverlapEstimator m3dbase ${OpenCV_LIBS} ${PCL_LIBRARIES})
 
-#add_executable(debug4GraphInitializer debug4GraphInitializer.cpp ${M3D_INITIALIZER_SRCS})
-#target_link_libraries(debug4GraphInitializer m3dbase ${OpenCV_LIBS} ${PCL_LIBRARIES})
+add_executable(debug4GraphInitializer debug4GraphInitializer.cpp ${M3D_INITIALIZER_SRCS})
+target_link_libraries(debug4GraphInitializer m3dbase ${OpenCV_LIBS} ${PCL_LIBRARIES})
 
 
 # pcl error... debug...
 #add_executable(debugPclLib debugPclLib.cpp)
 #target_link_libraries(debugPclLib m3dbase ${OpenCV_LIBS} ${PCL_LIBRARIES})
-
 
 
 

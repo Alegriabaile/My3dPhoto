@@ -8,6 +8,19 @@
 #include "0DisjointSet.h"
 namespace m3d
 {
+    class SimpleEdge
+    {
+    public:
+        size_t src, dst;
+        double rts[6];
+
+        SimpleEdge(const size_t src_, const size_t dst_, const double * const rts_)
+                : src(src_), dst(dst_)
+        {
+            for(size_t i=0; i<6; ++i)
+                rts[i] = rts_[i];
+        }
+    };
     class Edge
     {
     public:

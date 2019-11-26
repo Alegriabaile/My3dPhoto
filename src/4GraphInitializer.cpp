@@ -2,9 +2,9 @@
 // Created by ale on 19-11-22.
 //
 
+#include "0transform.h"
 #include "1Logger.h"
 #include "4GraphInitializer.h"
-
 
 //using namespace cv;
 //using namespace std;
@@ -153,6 +153,81 @@ namespace m3d
         }
     }
 
+    //src(V0) ----R,t----> dst(V1).
+    //R0V0 + t0 --------> V1.
+    //R1(V1) + t1 --------> world(0, 0, 0).
+    //R1R0V0 + R1t0 + t1 --------> world.
+    //R1R0 = Rsrc, R1t0 + t1 = tsrc.
+
+    //dst(V1) ----R, t----> src(V0)
+    //R0-1V1 + (-R0-1t0) --------> V0.
+
+    void GraphInitializer::GenPosesFromMst()
+    {
+        const std::vector<bool> &activatedEdgesMst = graph.activatedEdgesMst;
+        const std::vector<bool> &activatedFrames = graph.activatedFrames;
+        const std::vector<Edge> &edges = graph.edges;
+        size_t src, dst;
+
+        size_t esz, vsz;
+        esz = vsz = 0;
+
+        std::vector<SimpleEdge> mstEdges;
+        for(size_t i=0; i<activatedEdgesMst.size(); ++i)
+            if(activatedEdgesMst[i])
+            {
+                src = edges[i].src;
+                dst = edges[i].dst;
+                const double *rts = edges[i].rts;
+                SimpleEdge simpleEdge(src, dst, rts);
+                mstEdges.push_back(simpleEdge);
+
+                ++esz;
+            }
+
+        vsz = esz + 1;
+        std::set<size_t > mstVertices;
+
+        //initialize the first edge.
+        src = mstEdges[0].src;
+        dst = mstEdges[0].dst;
+        mstVertices.insert(src);
+        mstVertices.insert(dst);
+        m3d::RelativeToGlobal(frames[dst].extrinsicD.transform(), mstEdges[0].rts, frames[src].extrinsicD.transform(), true);
+
+        //todo
+        //add all edges to global graph.
+        while(mstVertices.size() < vsz)
+        {
+            for(size_t i = 0; i < mstEdges.size(); ++i)
+            {
+                src = mstEdges[i].src;
+                dst = mstEdges[i].dst;
+                if(mstVertices.find(src) == mstVertices.end() ^ mstVertices.find(dst) == mstVertices.end())
+                {
+                    if(mstVertices.find(src) != mstVertices.end())
+                    {
+                        const double * const globalPose = frames[src].extrinsicD.transform();
+                        const double * const relativePose = mstEdges[i].rts;
+                        double* res = frames[dst].extrinsicD.transform();
+                        bool fSrc2Dst = false;
+                        m3d::RelativeToGlobal( globalPose, relativePose, res, fSrc2Dst);
+                    }else
+                    {
+                        const double * const globalPose = frames[dst].extrinsicD.transform();
+                        const double * const relativePose = mstEdges[i].rts;
+                        double* res = frames[src].extrinsicD.transform();
+                        bool fSrc2Dst = true;
+                        m3d::RelativeToGlobal( globalPose, relativePose, res, fSrc2Dst);
+                    }
+                    mstVertices.insert(src);
+                    mstVertices.insert(dst);
+                    break;
+                }
+            }
+        }
+    }
+
     void GraphInitializer::GenInitViaMst()
     {
         std::vector<Edge> &edges = graph.edges;
@@ -174,21 +249,23 @@ namespace m3d
 
 
         //get the vertices/frames of the max graph.
-//        std::set<size_t> Vs;
-//        std::vector<Edge> Es;
-//        for(size_t i=0; i<sz; ++i)
-//            if(disjointSets.Find(i) == parentOfDisjointSet)
-//                Vs.insert(i);
-//
-//        sz = edges.size();
-//        for(size_t i=0; i<sz; ++i)
-//            if(activatedEdges[i])
-//                Es.push_back(edges[i]);
-//
-//        //Prim's algorithm of minimum spanning tree.
-//        GenMstViaPrim(Vs, Es);
-//        for(size_t i=0; i<Es.size(); ++i)
-//            std::cout<<i<<" th: "<<Es[i].src<<", "<<Es[i].dst<<": "<<Es[i].translations[0]<<std::endl;
+        /*
+        std::set<size_t> Vs;
+        std::vector<Edge> Es;
+        for(size_t i=0; i<vsz; ++i)
+            if(disjointSets.Find(i) == parentOfDisjointSet)
+                Vs.insert(i);
+
+        esz = edges.size();
+        for(size_t i=0; i<esz; ++i)
+            if(activatedEdges[i])
+                Es.push_back(edges[i]);
+
+        //Prim's algorithm of minimum spanning tree.
+        GenMstViaPrim(Vs, Es);
+        for(size_t i=0; i<Es.size(); ++i)
+            std::cout<<i<<" th: "<<Es[i].src<<", "<<Es[i].dst<<": "<<Es[i].translations[0]<<std::endl;
+        */
 
         //
         for(size_t i=0; i<vsz; ++i)
@@ -202,6 +279,8 @@ namespace m3d
 
         //todo
         //get initial&&global pose from the mst edges.
+        GenPosesFromMst();
+
     }
 
 }

@@ -43,6 +43,10 @@ void run(int argc, char** argv)
 
     //vertice and edge ------> graph ------> initial global pose
     m3d::OverlapEstimator overlapEstimator(frames, graph);
+
+
+
+    std::cout<<"start GraphInitializer..."<<std::endl;
     m3d::GraphInitializer graphInitializer(frames, graph);
 
 
@@ -98,11 +102,11 @@ void run(int argc, char** argv)
         cv::waitKey(3000);
         viewer.showCloud(cloud1);
     }
-
+    
     while(!viewer.wasStopped())
         ;
     cloud1->clear();
-
+    
     //no linear optimization of global pose
     //todo
 

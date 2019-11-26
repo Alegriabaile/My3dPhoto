@@ -74,31 +74,33 @@ namespace m3d
     {
     private:
         //data
-        T a[3];//angleAxis
-        T t[3];//translate
+//        T a[3];//angleAxis
+//        T t[3];//translate
+        
     public:
-
+        T rts[6];
         //constructor, deconstructor
         Extrinsic(T _ax = 0, T _ay = 0, T _az = 0,
                   T _tx = 0, T _ty = 0, T _tz = 0)
         {
-            a[0] = _ax; a[1] = _ay; a[2] = _az;
-            t[0] = _tx; t[1] = _ty; t[2] = _tz;
+            rts[0] = _ax; rts[1] = _ay; rts[2] = _az;
+            rts[3] = _tx; rts[4] = _ty; rts[5] = _tz;
         }
 
         Extrinsic(T _a[3], T _t[3])
         {
             for(int i=0; i<3; ++i)
             {
-                a[i] = _a[i];
-                t[i] = _t[i];
+                rts[i] = _a[i];
+                rts[i+3] = _t[i];
             }
         }
         virtual ~Extrinsic(){}
 
         //functions
-        T* angleAxis(){ return a;}
-        T* translate(){ return t;}
+        T* angleAxis(){ return rts;}
+        T* translate(){ return rts+3;}
+        T* transform(){ return rts;}
 
     };
     typedef Extrinsic<double> ExtrinsicD;

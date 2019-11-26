@@ -23,7 +23,10 @@ namespace m3d
         void GenMstViaPrim(const std::set<size_t> &Vs, std::vector<m3d::Edge> &Es);
         void GenMstViaPrim(const std::vector<bool> &activatedFrames, const std::vector<bool> &activatedEdges, const std::vector<m3d::Edge> &edges,
                                              std::vector<bool> &activatedEdgesMst);
+
+        void GenPosesFromMst();
         void GenInitViaMst();
+
 
     public:
         GraphInitializer(std::vector<m3d::Frame> &frames_, m3d::Graph &graph_);

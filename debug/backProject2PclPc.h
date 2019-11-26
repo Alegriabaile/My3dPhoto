@@ -41,8 +41,8 @@ void backProject2PclPc(m3d::Frame& frame, double *rts, pcl::PointCloud<pcl::Poin
     cx = m3d::Frame::intrinsicD.ppx_d();
     cy = m3d::Frame::intrinsicD.ppy_d();
 
-    for (int row = 0; row < rows; ++row)
-        for (int col = 0; col < cols; ++col)
+    for (int row = 0; row < rows; row = row + 10)
+        for (int col = 0; col < cols; col = col + 10)
         {
             double d = frame.depth.ptr<float>(row)[col];
             PointXYZRGBA p;
