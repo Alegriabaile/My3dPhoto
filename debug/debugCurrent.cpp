@@ -8,6 +8,8 @@
 #include "3FeatureMatcher.h"
 #include "4OverlapEstimator.h"
 #include "4GraphInitializer.h"
+#include "5DepthDeformer.h"
+
 
 void run(int argc, char** argv);
 
@@ -44,7 +46,8 @@ void run(int argc, char** argv)
     //vertice and edge ------> graph ------> initial global pose
     m3d::OverlapEstimator overlapEstimator(frames, graph);
     m3d::GraphInitializer graphInitializer(frames, graph);
-
+    
+    m3d::DepthDeformer<2,2> depthDeformer(frames, graph, argv[0]);
 
     std::cout<<"start debug..."<<std::endl;
     //debug...

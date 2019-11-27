@@ -45,6 +45,8 @@ void backProject2PclPc(m3d::Frame& frame, double *rts, pcl::PointCloud<pcl::Poin
         for (int col = 0; col < cols; col = col + 10)
         {
             double d = frame.depth.ptr<float>(row)[col];
+            if(d < 0 || d > 60000)
+                continue;
             PointXYZRGBA p;
             double w = d;
             double u = (col - cx) * w / fx;

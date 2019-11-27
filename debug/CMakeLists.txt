@@ -22,6 +22,6 @@ target_link_libraries(debug4GraphInitializer m3dbase ${OpenCV_LIBS} ${PCL_LIBRAR
 
 
 add_executable(debugCurrent debugCurrent.cpp ${M3D_INITIALIZER_SRCS})
-target_link_libraries(debugCurrent m3dbase ${OpenCV_LIBS} ${PCL_LIBRARIES})
+target_link_libraries(debugCurrent m3dbase ${OpenCV_LIBS} ${PCL_LIBRARIES} ${CERES_LIBRARIES})
 
 
