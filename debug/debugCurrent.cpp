@@ -9,7 +9,7 @@
 #include "4OverlapEstimator.h"
 #include "4GraphInitializer.h"
 #include "5DepthDeformer.h"
-
+#include "5PoseNLLSOptimizer.h"
 
 void run(int argc, char** argv);
 
@@ -47,7 +47,8 @@ void run(int argc, char** argv)
     m3d::OverlapEstimator overlapEstimator(frames, graph);
     m3d::GraphInitializer graphInitializer(frames, graph);
     
-    m3d::DepthDeformer<2,2> depthDeformer(frames, graph, argv[0]);
+//    m3d::DepthDeformer<2,2> depthDeformer(frames, graph, argv[0]);
+    m3d::RigidProblem rigidProblem(frames, graph, argv[0]);
 
     std::cout<<"start debug..."<<std::endl;
     //debug...
