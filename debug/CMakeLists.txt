@@ -5,7 +5,7 @@ add_subdirectory("unit_test")
 
 # ==============================================================================
 # ==============================================================================
-#
+# different progresses of the entire program.
 add_executable(debug2FeatureExtractor debug2FeatureExtractor.cpp)
 target_link_libraries(debug2FeatureExtractor ${OpenCV_LIBS} m3dbase)
 
@@ -29,13 +29,15 @@ target_link_libraries(debug6PanoramaWarper m3dbase ${OpenCV_LIBS} ${PCL_LIBRARIE
 #target_link_libraries(debugPclLib m3dbase ${OpenCV_LIBS} ${PCL_LIBRARIES})
 
 # differences between Rodrigues and EulerAngle. debug...
-add_executable(debug6CompareRodriguesEulerAngle debug6CompareRodriguesEulerAngle.cpp)
-target_link_libraries(debug6CompareRodriguesEulerAngle  ${OpenCV_LIBS})
+#add_executable(debug6CompareRodriguesEulerAngle debug6CompareRodriguesEulerAngle.cpp)
+#target_link_libraries(debug6CompareRodriguesEulerAngle  ${OpenCV_LIBS})
+
+
 
 # ==============================================================================
 # ==============================================================================
 # the current debugging process.
-add_executable(debugCurrent debugCurrent.cpp ${M3D_INITIALIZER_SRCS} ${M3D_WARPER_SRCS})
+add_executable(debugCurrent debugCurrent.cpp ${M3D_INITIALIZER_SRCS} ${M3D_WARPER_SRCS} ${M3D_STITCHER_SRCS})
 target_link_libraries(debugCurrent m3dbase ${OpenCV_LIBS} ${PCL_LIBRARIES} ${CERES_LIBRARIES} glfw libGL.so)
 
 

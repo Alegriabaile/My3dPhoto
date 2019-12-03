@@ -106,7 +106,7 @@ void run(int argc, char** argv)
         cv::resize(panoDepth, panoDepth, cv::Size(1000, 500));
         imshow("panoImage", panoImage);
         imshow("panoDepth", panoDepth);
-//        waitKey();
+        waitKey();
     }
 
     //stitch panoramas to result.

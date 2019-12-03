@@ -11,7 +11,7 @@
 #include "5DepthDeformer.h"
 #include "5PoseNLLSOptimizer.h"
 #include "6PanoramaWarper.h"
-
+#include "7PanoramaStitcher.h"
 
 void run(int argc, char** argv);
 
@@ -56,7 +56,50 @@ void run(int argc, char** argv)
     m3d::PanoramaWarper panoramaWarper(frames);
 
     //stitch panoramas to result.
-    //todo
+    m3d::Frame result;
+    m3d::PanoramaStitcher(frames, result);
+
+    //debug...
+
+    for(size_t i = 0; i < frames.size(); ++i)
+    {
+        const cv::Mat &pano_image = frames[i].pano_image;
+        const cv::Mat &pano_depth = frames[i].pano_depth;
+        const cv::Mat &pano_error = frames[i].pano_error;
+
+        size_t minH = m3d::Frame::PANO_H - 1;
+        size_t maxH = 0;
+        size_t minW = m3d::Frame::PANO_W - 1;
+        size_t maxW = 0;
+
+        for(size_t h = 0; h < m3d::Frame::PANO_H; ++h)
+        {
+            for(size_t w = 0; w < m3d::Frame::PANO_W; ++w)
+            {
+                if(!(pano_depth.at<float>(h,w) > 0))
+                    continue;
+
+                if(minH > h)
+                    minH = h;
+                if(maxH < h)
+                    maxH = h;
+
+                if(minW > w)
+                    minW = w;
+                if(maxW < w)
+                    maxW = w;
+            }
+        }
+
+        cv::Mat image = pano_image(Range(minH, maxH), Range(minW, maxW)).clone();
+        cv::Mat error = pano_error(Range(minH, maxH), Range(minW, maxW)).clone();
+
+        cv::imshow("image", image);
+        cv::imshow("error", error/5.0f);
+        cv::waitKey();
+    }
+
+
 
 
     //generate back layers.

@@ -8,12 +8,6 @@
 #include "0m3d.h"
 #include "6OpenglManagerForWarper.h"
 
-#include <glm/glm.hpp>
-#include <glm/gtc/matrix_transform.hpp>
-#include <glm/gtc/type_ptr.hpp>
-#include <iostream>
-
-
 namespace m3d
 {
 

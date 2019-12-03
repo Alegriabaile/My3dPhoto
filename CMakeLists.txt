@@ -64,6 +64,9 @@ file(GLOB M3D_WARPER_SRCS
         src/6OpenglManagerForWarper.cpp
         src/6PanoramaWarper.cpp)
 
+# m3d panorama stitcher.
+file(GLOB M3D_STITCHER_SRCS
+        src/7PanoramaStitcher.cpp)
 
 
 # ==============================================================================
