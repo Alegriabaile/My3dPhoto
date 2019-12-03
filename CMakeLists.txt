@@ -48,12 +48,13 @@ find_package(Ceres REQUIRED)
 find_package(glfw3 3.2 REQUIRED)
 
 # ==============================================================================
-# glad
+# glad, glm
 # ==============================================================================
 # - internal by default
 # ==============================================================================
-#file(GLOB GLAD_SRCS
-#        3rd/glad/src/glad.c)
+include_directories("3rd/glad/src")
+include_directories("3rd/glad/include")
+include_directories("3rd")
 #
 #add_library(glad STATIC ${GLAD_SRCS})
 ##set_target_properties(glad PROPERTIES COMPILE_FLAGS "-O2 -DNDEBUG")
@@ -69,6 +70,7 @@ find_package(glfw3 3.2 REQUIRED)
 # - internal by default
 # ==============================================================================
 file(GLOB M3D_BASE_SRCS
+        src/0transform.cpp
         src/0m3d.cpp
         src/1Logger.cpp
         src/1FrameReader.cpp)
@@ -79,7 +81,10 @@ target_include_directories(m3dbase PRIVATE include)
 file(GLOB M3D_INITIALIZER_SRCS
         src/4OverlapEstimator.cpp
         src/4GraphInitializer.cpp)
-
+file(GLOB M3D_WARPER_SRCS
+        3rd/glad/src/glad.c
+        src/6OpenglManagerForWarper.cpp
+        src/6PanoramaWarper.cpp)
 
 
 # ==============================================================================

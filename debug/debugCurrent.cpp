@@ -10,6 +10,8 @@
 #include "4GraphInitializer.h"
 #include "5DepthDeformer.h"
 #include "5PoseNLLSOptimizer.h"
+#include "6PanoramaWarper.h"
+
 
 void run(int argc, char** argv);
 
@@ -50,69 +52,71 @@ void run(int argc, char** argv)
 //    m3d::DepthDeformer<2,2> depthDeformer(frames, graph, argv[0]);
     m3d::RigidProblem rigidProblem(frames, graph, argv[0]);
 
-    std::cout<<"start debug..."<<std::endl;
-    //debug...
+    //warpToPanorama
+    //todo
+    m3d::PanoramaWarper panoramaWarper(frames);
 
-    //debug...
-    for(size_t i = 0; i < graph.edges.size(); ++i)
+
+    //debug
+    for(size_t i = 0; i < frames.size(); ++i)
     {
-        if(!graph.activatedEdgesMst[i])
+        if(!graph.activatedFrames[i])
             continue;
+        std::cout<<i<<" th frame debug...."<<std::endl;
 
-        std::cout<<"\t"<<i<<" th activated from mst---- src, dst, rts[6]:  "<<std::endl<<"\t";
+        cv::Mat panoImage = frames[i].pano_image.clone();
+        cv::Mat panoDepth = frames[i].pano_depth.clone();
 
-        size_t src = graph.edges[i].src;
-        size_t dst = graph.edges[i].dst;
-        double *rts = graph.edges[i].rts;
-        std::cout<<src<<", "<<dst<<" : ";
-        for(size_t j = 0; j < 6; ++j)
-            std::cout<<rts[j]<<" ";
-        std::cout<<std::endl;
+        size_t minH = m3d::Frame::PANO_H - 1;
+        size_t maxH = 0;
+        size_t minW = m3d::Frame::PANO_W - 1;
+        size_t maxW = 0;
+        for(size_t h = 0; h < m3d::Frame::PANO_H; ++h)
+        {
+            for(size_t w = 0; w < m3d::Frame::PANO_W; ++w)
+            {
+                if(!(panoDepth.at<float>(h,w) > 0))
+                    continue;
+
+                if(minH > h)
+                    minH = h;
+                if(maxH < h)
+                    maxH = h;
+
+                if(minW > w)
+                    minW = w;
+                if(maxW < w)
+                    maxW = w;
+            }
+        }
+        cv::Mat croppedImage;// = panoImage(cv::Range(minH, maxH), cv::Range(minW, maxW)).clone();
+
+        imshow("croppedImage", croppedImage);
+        imshow("panoImage", panoImage);
+        imshow("panoDepth", panoDepth);
+        waitKey();
+
+        std::string imgName(std::to_string(i) + "_th_panoImage.jpg");
+        std::string dptName(std::to_string(i) + "_th_pano_Depth.png");
+        std::string croppedName(std::to_string(i) + "_th_croppedImage.jpg");
+
+        panoDepth.convertTo(panoDepth, CV_16UC1);
+        cv::imwrite(imgName, panoImage);
+        cv::imwrite(dptName, panoDepth);
+        cv::imwrite(croppedName, croppedImage);
     }
 
-    pcl::visualization::CloudViewer viewer("pcl viewer");
-    const std::vector<bool> &activatedFrames = graph.activatedFrames;
-    const size_t sz = frames.size();
-    PointCloud<PointXYZRGBA>::Ptr cloud1( new PointCloud<PointXYZRGBA>);
-    for(size_t i = 0; i<sz; ++i)
-    {
-        if(!activatedFrames[i])
-            continue;
-
-        string str1(frames[i].imageFileName);
-
-        cout<<endl;
-        cout<<"\t"<<i<<" th frame:\t"<<str1.substr(str1.size() - 8)<<endl;
-
-        double *rts = frames[i].extrinsicD.rts;
-        for(size_t k = 0; k < 6; ++k)
-            cout<<"\t"<<rts[k]<<", ";
-        cout<<endl;
-
-        PointCloud<PointXYZRGBA>::Ptr cloud2( new PointCloud<PointXYZRGBA>);
-        backProject2PclPc(frames[i], rts, cloud2);
-
-        double minVal, maxVal;
-        cv::minMaxLoc(frames[i].depth, &minVal, &maxVal);
-        cout<<"\t minVal, maxVal of src: "<<minVal<<", "<<maxVal<<endl;
-
-        *cloud1 += *cloud2;
-        cloud2->clear();
-
-        cv::waitKey(3000);
-        viewer.showCloud(cloud1);
-    }
-
-    while(!viewer.wasStopped())
-        ;
-    cloud1->clear();
-
-    //no linear optimization of global pose
+    //stitch panoramas to result.
     //todo
 
-    //depth deformation
+
+    //generate back layers.
     //todo
 
-    //to be continued
+
+    //save, or show results.
+    //saving to jpg+png rgbd image and rendering from them is faster than rendering from .obj
+    //todo
+
 }
 

@@ -10,4 +10,13 @@
 #include "0Frame.h"
 #include "0Graph.h"
 
+//algorithms
+#include "0transform.h"
+
+namespace m3d
+{
+
+}
+
+
 #endif //MY3DPHOTO_0M3D_H

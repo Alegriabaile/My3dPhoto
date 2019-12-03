@@ -25,7 +25,6 @@ namespace m3d
         std::string paramFileName;
 
         State state;
-        static IntrinsicD intrinsicD;
         ExtrinsicD extrinsicD;
 
         cv::Mat image, depth, disparity;
@@ -40,6 +39,11 @@ namespace m3d
         Frame() = default;
 
         virtual ~Frame() {};
+
+
+        static IntrinsicD intrinsicD;
+        static const size_t PANO_W;
+        static const size_t PANO_H;
     };
 
 

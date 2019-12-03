@@ -23,7 +23,7 @@ target_link_libraries(debug5PoseNLLSOptimizer m3dbase ${OpenCV_LIBS} ${PCL_LIBRA
 
 
 
-add_executable(debugCurrent debugCurrent.cpp ${M3D_INITIALIZER_SRCS})
-target_link_libraries(debugCurrent m3dbase ${OpenCV_LIBS} ${PCL_LIBRARIES} ${CERES_LIBRARIES})
+add_executable(debugCurrent debugCurrent.cpp ${M3D_INITIALIZER_SRCS} ${M3D_WARPER_SRCS})
+target_link_libraries(debugCurrent m3dbase ${OpenCV_LIBS} ${PCL_LIBRARIES} ${CERES_LIBRARIES} glfw libGL.so)
 
 

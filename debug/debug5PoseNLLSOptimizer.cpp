@@ -55,22 +55,62 @@ void run(int argc, char** argv)
 //    m3d::DepthDeformer<2,2> depthDeformer(frames, graph, argv[0]);
     m3d::RigidProblem rigidProblem(frames, graph, argv[0]);
 
-    //warpToPanorama
-    //todo
+    std::cout<<"start debug..."<<std::endl;
+    //debug...
 
+    //debug...
+    for(size_t i = 0; i < graph.edges.size(); ++i)
+    {
+        if(!graph.activatedEdgesMst[i])
+            continue;
 
-    //stitch panoramas to result.
-    //todo
+        std::cout<<"\t"<<i<<" th activated from mst---- src, dst, rts[6]:  "<<std::endl<<"\t";
 
+        size_t src = graph.edges[i].src;
+        size_t dst = graph.edges[i].dst;
+        double *rts = graph.edges[i].rts;
+        std::cout<<src<<", "<<dst<<" : ";
+        for(size_t j = 0; j < 6; ++j)
+            std::cout<<rts[j]<<" ";
+        std::cout<<std::endl;
+    }
 
-    //generate back layers.
-    //todo
+    pcl::visualization::CloudViewer viewer("pcl viewer");
+    const std::vector<bool> &activatedFrames = graph.activatedFrames;
+    const size_t sz = frames.size();
+    PointCloud<PointXYZRGBA>::Ptr cloud1( new PointCloud<PointXYZRGBA>);
+    for(size_t i = 0; i<sz; ++i)
+    {
+        if(!activatedFrames[i])
+            continue;
 
+        string str1(frames[i].imageFileName);
 
-    //save, or show results.
-    //saving to jpg+png rgbd image and rendering from them is faster than rendering from .obj
-    //todo
+        cout<<endl;
+        cout<<"\t"<<i<<" th frame:\t"<<str1.substr(str1.size() - 8)<<endl;
 
+        double *rts = frames[i].extrinsicD.rts;
+        for(size_t k = 0; k < 6; ++k)
+            cout<<"\t"<<rts[k]<<", ";
+        cout<<endl;
+
+        PointCloud<PointXYZRGBA>::Ptr cloud2( new PointCloud<PointXYZRGBA>);
+        backProject2PclPc(frames[i], rts, cloud2);
+
+        double minVal, maxVal;
+        cv::minMaxLoc(frames[i].depth, &minVal, &maxVal);
+        cout<<"\t minVal, maxVal of src: "<<minVal<<", "<<maxVal<<endl;
+
+        *cloud1 += *cloud2;
+        cloud2->clear();
+
+        cv::waitKey(3000);
+        viewer.showCloud(cloud1);
+    }
+
+    while(!viewer.wasStopped())
+        ;
+    cloud1->clear();
 
 }
 
