@@ -3,72 +3,48 @@ project(My3dPhoto)
 
 set(CMAKE_CXX_STANDARD 11)
 
+# ==============================================================================
+# ==============================================================================
+# ////////////////////// binary/library dir for generating ///////////////////////////
 #PROJECT_SOURCE_DIR: 工程路径
 #PROJECT_BINARY_DIR: build路径
-#find_package(Eigen3  REQUIRED)
-#find_package(Ceres REQUIRED)
-find_package(OpenCV REQUIRED)
-#find_package(glfw3 3.2 REQUIRED)
-#find_package(OpenGL 3.3 REQUIRED)
-#find_package(PCL REQUIRED)#COMPONENTS common io)# visualization)# COMPONENTS common io visualization)
-
-# ////////////////////// binary/library dir for generating ///////////////////////////
 set(EXECUTABLE_OUTPUT_PATH ${PROJECT_SOURCE_DIR}/bin)
 set(LIBRARY_OUTPUT_PATH  ${PROJECT_SOURCE_DIR}/lib)
 
-## ==============================================================================
-## pcl
-## ==============================================================================
-## - external by default
-## ==============================================================================
+# ==============================================================================
+# ==============================================================================
+# opencv 3.4.1 customly compiled from source code.
+find_package(OpenCV REQUIRED)
+
+# ==============================================================================
+# pcl
 find_package(PCL REQUIRED)#COMPONENTS common io)# visualization)# COMPONENTS common io visualization)
 include_directories(${PCL_INCLUDE_DIRS})
 
-
-
 # ==============================================================================
 # eigen3
-# ==============================================================================
-# - internal by default
-# ==============================================================================
 include_directories(${PROJECT_SOURCE_DIR}/3rd/eigen3)
 
 # ==============================================================================
 # ceres
-# ==============================================================================
-# - external by default
-# ==============================================================================
 find_package(Ceres REQUIRED)
 
 # ==============================================================================
 # glfw
-# ==============================================================================
-# - external by default
-# ==============================================================================
 find_package(glfw3 3.2 REQUIRED)
+#find_package(OpenGL 3.3 REQUIRED)
 
 # ==============================================================================
 # glad, glm
-# ==============================================================================
-# - internal by default
-# ==============================================================================
 include_directories("3rd/glad/src")
 include_directories("3rd/glad/include")
 include_directories("3rd")
-#
-#add_library(glad STATIC ${GLAD_SRCS})
-##set_target_properties(glad PROPERTIES COMPILE_FLAGS "-O2 -DNDEBUG")
-## CMakeLists file include environments.
-#target_include_directories(glad PRIVATE 3rd/glad/include)
 
 
 
-
+# ==============================================================================
 # ==============================================================================
 # m3d base: basic data structure, io...
-# ==============================================================================
-# - internal by default
-# ==============================================================================
 file(GLOB M3D_BASE_SRCS
         src/0transform.cpp
         src/0m3d.cpp
@@ -77,16 +53,20 @@ file(GLOB M3D_BASE_SRCS
 add_library(m3dbase STATIC ${M3D_BASE_SRCS})
 target_include_directories(m3dbase PRIVATE include)
 
-
+# m3d initialization part before optimization.
 file(GLOB M3D_INITIALIZER_SRCS
         src/4OverlapEstimator.cpp
         src/4GraphInitializer.cpp)
+
+# m3d panorama warper after optimization.
 file(GLOB M3D_WARPER_SRCS
         3rd/glad/src/glad.c
         src/6OpenglManagerForWarper.cpp
         src/6PanoramaWarper.cpp)
 
 
+
+# ==============================================================================
 # ==============================================================================
 # source file include environments.
 include_directories("3rd/glad/include")
@@ -97,5 +77,6 @@ include_directories("3rd/GMS-Feature-Matcher/include")
 
 
 
-
+# ==============================================================================
+# ==============================================================================
 add_subdirectory("debug/")

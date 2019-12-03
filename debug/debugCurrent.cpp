@@ -53,58 +53,7 @@ void run(int argc, char** argv)
     m3d::RigidProblem rigidProblem(frames, graph, argv[0]);
 
     //warpToPanorama
-    //todo
     m3d::PanoramaWarper panoramaWarper(frames);
-
-
-    //debug
-    for(size_t i = 0; i < frames.size(); ++i)
-    {
-        if(!graph.activatedFrames[i])
-            continue;
-        std::cout<<i<<" th frame debug...."<<std::endl;
-
-        cv::Mat panoImage = frames[i].pano_image.clone();
-        cv::Mat panoDepth = frames[i].pano_depth.clone();
-
-        size_t minH = m3d::Frame::PANO_H - 1;
-        size_t maxH = 0;
-        size_t minW = m3d::Frame::PANO_W - 1;
-        size_t maxW = 0;
-        for(size_t h = 0; h < m3d::Frame::PANO_H; ++h)
-        {
-            for(size_t w = 0; w < m3d::Frame::PANO_W; ++w)
-            {
-                if(!(panoDepth.at<float>(h,w) > 0))
-                    continue;
-
-                if(minH > h)
-                    minH = h;
-                if(maxH < h)
-                    maxH = h;
-
-                if(minW > w)
-                    minW = w;
-                if(maxW < w)
-                    maxW = w;
-            }
-        }
-        cv::Mat croppedImage;// = panoImage(cv::Range(minH, maxH), cv::Range(minW, maxW)).clone();
-
-        imshow("croppedImage", croppedImage);
-        imshow("panoImage", panoImage);
-        imshow("panoDepth", panoDepth);
-        waitKey();
-
-        std::string imgName(std::to_string(i) + "_th_panoImage.jpg");
-        std::string dptName(std::to_string(i) + "_th_pano_Depth.png");
-        std::string croppedName(std::to_string(i) + "_th_croppedImage.jpg");
-
-        panoDepth.convertTo(panoDepth, CV_16UC1);
-        cv::imwrite(imgName, panoImage);
-        cv::imwrite(dptName, panoDepth);
-        cv::imwrite(croppedName, croppedImage);
-    }
 
     //stitch panoramas to result.
     //todo

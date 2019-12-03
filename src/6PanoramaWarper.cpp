@@ -153,12 +153,6 @@ namespace m3d {
 
 
         ////////////////////////////////////////////MVP///////////////////////////////////////////////////////////
-        //从frame.rxryrxtxtytz中恢复此图片的外参，作为model矩阵参数
-//        skyboxModel = glm::mat4(1.0f); // make sure to initialize matrix to identity matrix first
-//        skyboxModel = glm::translate(skyboxModel, glm::vec3(frame.tx, frame.ty, frame.tz));//should do translate first before rotate
-//        skyboxModel = glm::rotate(skyboxModel, (float)frame.rx, glm::vec3(1.0f, 0.0f, 0.0f));
-//        skyboxModel = glm::rotate(skyboxModel, (float)frame.ry, glm::vec3(0.0f, 1.0f, 0.0f));
-//        skyboxModel = glm::rotate(skyboxModel, (float)frame.rz, glm::vec3(0.0f, 0.0f, 1.0f));
         m3d::transformMatrixFromExtrinsics(frame.extrinsicD.rts, skyboxModel);
 
     }
@@ -335,8 +329,8 @@ namespace m3d {
         std::vector<float> vertices;
         cv::Mat radius;
 
-        GenerateTriangles(kframe.depth, intrinsics, vertices, radius);
-
+        size_t triSize = GenerateTriangles(kframe.depth, intrinsics, vertices, radius);
+        std::cout<<"GenerateTriangles(): triangle size: "<<triSize<<std::endl;
         std::vector<cv::Mat> images, depths;
         GenerateSkybox(kframe, vertices);
 
