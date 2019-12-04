@@ -6,8 +6,8 @@
 
 namespace m3d
 {
-    PanoramaStitcher::PanoramaStitcher(std::vector<m3d::Frame> &frames_, m3d::Frame &result_)
-    : frames(frames_), result(result_)
+    PanoramaStitcher::PanoramaStitcher(const std::vector<bool> &activatedFrames_, std::vector<m3d::Frame> &frames_, m3d::Frame &result_)
+    : activatedFrames(activatedFrames_), frames(frames_), result(result_)
     {
         GeneratePenalties();
         StitchPanoramasWithPenalties();
@@ -67,9 +67,9 @@ namespace m3d
 
     void PanoramaStitcher::GenerateConsensusPenalty()
     {
-        if(frames.empty())
+        if(frames.size() < 2)
         {
-            m3d::LOG("PanoramaStitcher::GenerateConsensusPenalty()", "frames.empty()");
+            m3d::LOG("PanoramaStitcher::GenerateConsensusPenalty()", "frames.size() < 2");
             exit(-1);
         }
 
@@ -77,8 +77,14 @@ namespace m3d
         size_t sz = frames.size();
         for(size_t i = 0; i < sz - 1; ++i)
         {
+            if(!activatedFrames[i])
+                continue;
+
             for(size_t j = 0; j < sz; ++j)
             {
+                if(!activatedFrames[j])
+                    continue;
+
                 GenerateRelativeConsensus(frames[i], frames[j]);
             }
         }
@@ -86,11 +92,11 @@ namespace m3d
         //generate the consensus penalty.
         for(size_t i = 0; i < sz - 1; ++i)
         {
+            if(!activatedFrames[i])
+                continue;
+
             cv::Mat &pano_error = frames[i].pano_error;
             const cv::Mat &pano_depth = frames[i].pano_depth;
-
-            if(pano_error.empty())
-                continue;
 
             cv::Mat tmp_error = 1.0 - pano_error/3.0f;
             cv::Mat tmp_mask = (tmp_error > 0) & (pano_depth > 0);
@@ -105,10 +111,10 @@ namespace m3d
 
         for(size_t i = 0; i < sz; ++i)
         {
-            m3d::Frame &frame = frames[i];
-            if(frame.pano_depth.empty())
+            if(!activatedFrames[i])
                 continue;
 
+            m3d::Frame &frame = frames[i];
             cv::Mat &pano_image = frame.pano_image;
             cv::Mat &pano_depth = frame.pano_depth;
             cv::Mat &pano_error = frame.pano_error;
@@ -140,6 +146,9 @@ namespace m3d
 
         for(size_t i = 0; i < sz; ++i)
         {
+            if(!activatedFrames[i])
+                continue;
+
             size_t minH = m3d::Frame::PANO_H - 1;
             size_t maxH = 0;
             size_t minW = m3d::Frame::PANO_W - 1;
@@ -185,12 +194,35 @@ namespace m3d
         {
             result.pano_image = cv::Mat(m3d::Frame::PANO_H, m3d::Frame::PANO_W, CV_8UC3, cv::Scalar(0,0,0));
             result.pano_depth = cv::Mat(m3d::Frame::PANO_H, m3d::Frame::PANO_W, CV_32FC1, cv::Scalar(0.0));
-            result.pano_error = cv::Mat(m3d::Frame::PANO_H, m3d::Frame::PANO_W, CV_32FC1, cv::Scalar(0.0));
+
+            result.pano_error = cv::Mat(m3d::Frame::PANO_H, m3d::Frame::PANO_W, CV_32FC1, cv::Scalar(65500.0f));
             result.pano_label = cv::Mat(m3d::Frame::PANO_H, m3d::Frame::PANO_W, CV_16UC1, cv::Scalar(65500));
+            result.pano_label_bgr = cv::Mat(m3d::Frame::PANO_H, m3d::Frame::PANO_W, CV_8UC3, cv::Scalar(0,0,0));
         }
 
+        size_t sz = frames.size();
+        for(size_t i = 0; i < sz; ++ i)
+        {
+            if(!activatedFrames[i])
+                continue;
 
+            cv::Mat mask = (frames[i].pano_error < result.pano_error) & (frames[i].pano_depth > 0);
+            result.pano_label.setTo(i, mask);
 
+            cv::RNG rng(i);//pano_label_bgr.
+            for(size_t h = 0; h < m3d::Frame::PANO_H; ++h)
+            {
+                for (size_t w = 0; w < m3d::Frame::PANO_W; ++w)
+                {
+                    if(!mask.at<uchar>(h , w))
+                        continue;
+
+                    result.pano_image.at<cv::Vec3b>(h, w) = frames[i].pano_image.at<cv::Vec3b>(h, w);
+                    result.pano_depth.at<float>(h, w) = frames[i].pano_depth.at<float>(h, w);
+                    result.pano_error.at<float>(h, w) = frames[i].pano_error.at<float>(h, w);
+                }
+            }
+        }
     }
 
 }

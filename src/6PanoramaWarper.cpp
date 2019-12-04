@@ -8,7 +8,8 @@ namespace m3d {
     //可以将此步骤改写至shader中，比如使用instanced rendering，在geometry shader中生成三角网格、uv坐标
     int PanoramaWarper::GenerateTriangles(const cv::Mat &depth,
                                           const double * const intrinsics,//intrinsics[4]
-                                          std::vector<float> &vertices, cv::Mat &radius) {
+                                          std::vector<float> &vertices, cv::Mat &radius)
+    {
         const float MAX_DIFF = 0.05;//相邻像素深度值可相差的最大比率
 
         const float rows = depth.rows;
@@ -23,8 +24,10 @@ namespace m3d {
         vertices.reserve((rows - 1) * (cols - 1) * 6 * 5);
 
         float x, y, z, u, v;//3d coordinates and uv texture coordinates
-        for (float h = 0; h < rows - 1; ++h) {
-            for (float w = 0; w < cols - 1; ++w) {
+        for (float h = 0; h < rows - 1; ++h)
+        {
+            for (float w = 0; w < cols - 1; ++w)
+            {
                 //参考了 https://github.com/simonfuhrmann/mve/blob/master/libs/mve/depthmap.cc#L211
                 //0 1
                 //2 3
@@ -225,7 +228,23 @@ namespace m3d {
         const uint WIDTH = openglManagerForWarper.WIDTH1;
         const uint HEIGHT = openglManagerForWarper.HEIGHT1;
         vPoints.clear();
-        vPoints = std::vector<float>(WIDTH*HEIGHT, 0);
+        vPoints.reserve(WIDTH*HEIGHT*3);
+
+        float H = HEIGHT - 1;
+        float W = WIDTH - 1;
+        for(size_t h = 0; h < HEIGHT; ++h)
+        {
+            for(size_t w = 0; w < WIDTH; ++w)
+            {
+                float x = (float(w)-W/2)/W;
+                float y = (float(h)-H/2)/H;
+                float z = 0.5f;
+
+                vPoints.push_back(x);
+                vPoints.push_back(y);
+                vPoints.push_back(z);
+            }
+        }
 //    for(int i=0; i<WIDTH*HEIGHT; ++i)
 //        vPoints[i] = i;
         return 0;
@@ -254,7 +273,7 @@ namespace m3d {
         glBufferData(GL_ARRAY_BUFFER, vPoints.size()*sizeof(float), &vPoints[0], GL_STATIC_DRAW);
 
         glEnableVertexAttribArray(0);
-        glVertexAttribPointer(0, 1, GL_FLOAT, GL_FALSE, 1*sizeof(float), (void*)0);
+        glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3*sizeof(float), (void*)0);
 
         glBindBuffer(GL_ARRAY_BUFFER, 0);
         glBindVertexArray(0);
@@ -275,7 +294,7 @@ namespace m3d {
         openglManagerForWarper.shaderPano1.setInt("depthTexture", 1);
         for(int i=0; i<6; i++)
         {
-            openglManagerForWarper.shaderPano1.setInt("WIDTH", WIDTH1);
+//            openglManagerForWarper.shaderPano1.setInt("WIDTH", WIDTH1);
             openglManagerForWarper.shaderPano1.setMat4("view", panoView);
             openglManagerForWarper.shaderPano1.setMat4("model", panoModels[i]);
 
@@ -286,7 +305,7 @@ namespace m3d {
             glBindTexture(GL_TEXTURE_2D, openglManagerForWarper.skyboxDepthTex2D[i]);
 
             glBindVertexArray(panoVAO);
-            glDrawArrays(GL_POINTS, 0, vPoints.size());
+            glDrawArrays(GL_POINTS, 0, vPoints.size()/3);
             glBindVertexArray(0);
         }
 

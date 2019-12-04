@@ -58,9 +58,9 @@ int main(int argc, char** argv)
         paras.push_back(IMWRITE_JPEG_QUALITY);
         paras.push_back(100);
         imwrite(outputName, output, paras);
-//        resize(output, output, output.size()/2);
-//        imshow("output", output);
-//        waitKey();
+        resize(output, output, output.size()/2);
+        imshow("output", output);
+        waitKey();
     }
 
     //vertice and edge ------> graph ------> initial global pose

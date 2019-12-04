@@ -21,8 +21,11 @@ code structure:
     todo: the border of faces of skybox is empty.
 
 7. stitching.
-    todo: multi-band
+    todo: multi-band.
 
-8. viewer.
+8. novel view content generation.
+    todo: generate back layer rgbd content.
+
+9. 3d viewer for the Panorama-type RGBD images.
     todo: standalone viewer toolkits.
 

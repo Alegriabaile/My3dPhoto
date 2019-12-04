@@ -12,7 +12,9 @@ namespace m3d
     class PanoramaStitcher
     {
     private:
+        const std::vector<bool> &activatedFrames;
         std::vector<m3d::Frame> &frames;
+
         m3d::Frame &result;
 
         //generate the consensus penalty.
@@ -33,7 +35,7 @@ namespace m3d
         void StitchPanoramasWithPenalties();
 
     public:
-        PanoramaStitcher(std::vector<m3d::Frame> &frames_, m3d::Frame &result_);
+        PanoramaStitcher(const std::vector<bool> &activatedFrames, std::vector<m3d::Frame> &frames_, m3d::Frame &result_);
         virtual ~PanoramaStitcher();
     };
 }
