@@ -421,32 +421,13 @@ namespace m3d {
     }
 
 
-    PanoramaWarper::PanoramaWarper(std::vector<m3d::Frame>& frames):
+    PanoramaWarper::PanoramaWarper(std::vector<m3d::Frame>& frames, m3d::Graph & graph):
             skyboxVAO(0), skyboxVBO(0)
     {
         InitializeReusable();
         for(int i=0; i<frames.size(); ++i)
-            WarpToPanorama(frames[i]);
-
-
-        //debug................
-//    for(int i=0; i<kframes.size(); ++i)
-//    {
-//        printf(" PanoramaWarper::PanoramaWarper              %d th imwrite.......", i);
-//        string color_name = string("/sdcard/000m3d2/debug_panorama_outputs/color_")+to_string(i)+(".jpg");
-//        string depth_name = string("/sdcard/000m3d2/debug_panorama_outputs/depth_")+to_string(i)+(".png");
-//        cv::Mat depth_tmp = kframes[i].pano_depth.clone();
-//        depth_tmp.convertTo(depth_tmp, CV_16U, 1000);//为了显示效果
-//
-//        double minV, maxV;
-//        minMaxLoc(kframes[i].pano_image, &minV, &maxV);
-//        printf("PanoramaWarper::PanoramaWarper:---kframes[%d].pano_image--- minV, maxV: %lf, %lf", i, minV, maxV);
-//
-//        minMaxLoc(depth_tmp, &minV, &maxV);
-//        printf("PanoramaWarper::PanoramaWarper:---depth_tmp[%d]--- minV, maxV: %lf, %lf", i, minV, maxV);
-//        imwrite(color_name, kframes[i].pano_image);
-//        imwrite(depth_name, depth_tmp);
-//    }
+            if(graph.activatedFrames[i])
+                WarpToPanorama(frames[i]);
     }
 
     PanoramaWarper::~PanoramaWarper() {}

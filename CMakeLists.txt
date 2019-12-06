@@ -47,6 +47,7 @@ include_directories("3rd")
 # m3d base: basic data structure, io...
 file(GLOB M3D_BASE_SRCS
         src/0transform.cpp
+        src/0Filters.cpp
         src/0m3d.cpp
         src/1Logger.cpp
         src/1FrameReader.cpp)
@@ -67,6 +68,11 @@ file(GLOB M3D_WARPER_SRCS
 # m3d panorama stitcher.
 file(GLOB M3D_STITCHER_SRCS
         src/7PanoramaStitcher.cpp)
+
+# m3d panorama back layer content generator.
+file(GLOB M3D_CONTENT_SRCS
+        src/8BackLayerContentGenerator.cpp)
+
 
 
 # ==============================================================================

@@ -1,4 +1,8 @@
 //
+// Created by ale on 19-12-6.
+//
+
+//
 // Created by ale on 19-11-25.
 //
 
@@ -24,7 +28,6 @@ int main(int argc, char** argv)
     return 0;
 }
 
-#include "backProject2PclPc.h"
 using namespace cv;
 using namespace std;
 using namespace pcl;
@@ -91,7 +94,7 @@ void compute(int argc, char** argv, m3d::Frame &result)
     //vertice and edge ------> graph ------> initial global pose
     m3d::OverlapEstimator overlapEstimator(frames, graph);
     m3d::GraphInitializer graphInitializer(frames, graph);
-    
+
 //    m3d::DepthDeformer<2,2> depthDeformer(frames, graph, argv[0]);
     m3d::RigidProblem rigidProblem(frames, graph, argv[0]);
 

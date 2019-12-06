@@ -52,7 +52,7 @@ namespace m3d
 
     public:
 
-        PanoramaWarper(std::vector<m3d::Frame> & frames);
+        PanoramaWarper(std::vector<m3d::Frame> & frames, m3d::Graph & graph);
         ~PanoramaWarper();
     };
 
