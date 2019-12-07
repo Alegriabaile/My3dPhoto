@@ -101,7 +101,7 @@ namespace m3d
 
         //sharpen the boundary of objects.
         cv::medianBlur(pano_depth_f, pano_depth_f, 5);
-//        cv::medianBlur(pano_depth_f, pano_depth_f, 5);
+        cv::medianBlur(pano_depth_f, pano_depth_f, 5);
 
         cv::Mat &pano_image_b = result_.pano_image_b;
         cv::Mat &pano_depth_b = result_.pano_depth_b;
@@ -139,12 +139,12 @@ namespace m3d
 
                 if( curVal > minVal)
                 {
-                    if( (curVal - minVal) > (0.05 * minVal))
+                    if( (curVal - minVal) > (0.02 * minVal))
                     {
                         pano_depth_b.at<float>(h, w) = curVal;
                         blocked.at<uchar>(h, w) = 255;
                     }
-                }else if((maxVal - curVal) > (0.05 * curVal))
+                }else if((maxVal - curVal) > (0.02 * curVal))
                     pano_depth_b.at<float>(h, w) = maxVal;
             }
         }
@@ -180,6 +180,7 @@ namespace m3d
 //            _DEBUG_ShowResults(result_);
         }
 
+        pano_depth_b.setTo(0.0f, pano_depth_f > pano_depth_b);
     }
 
     void BackLayerContentGenerator::GenerateColorContent(m3d::Frame &result_)

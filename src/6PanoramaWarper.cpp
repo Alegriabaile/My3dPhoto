@@ -75,8 +75,8 @@ namespace m3d {
                             z = d[tris[i][j]];
                             x = z * (w + tris[i][j] % 2 - cx) / fx;
                             y = z * (h + tris[i][j] / 2 - cy) / fy;
-                            u = (w + tris[i][j] % 2) / (float) (cols - 1);
-                            v = 1 - (h + tris[i][j] / 2) / (float) (rows - 1);
+                            u = (w + 0.5 + tris[i][j] % 2) / (float) (cols);
+                            v = 1 - (h + 0.5 + tris[i][j] / 2) / (float) (rows);
                             vertices.push_back(x);
                             vertices.push_back(y);
                             vertices.push_back(z);

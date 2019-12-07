@@ -12,7 +12,6 @@
 
 //algorithms
 #include "0transform.h"
-#include "0Filters.h"
 
 namespace m3d
 {

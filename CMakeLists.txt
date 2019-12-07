@@ -47,7 +47,6 @@ include_directories("3rd")
 # m3d base: basic data structure, io...
 file(GLOB M3D_BASE_SRCS
         src/0transform.cpp
-        src/0Filters.cpp
         src/0m3d.cpp
         src/1Logger.cpp
         src/1FrameReader.cpp)
@@ -59,9 +58,12 @@ file(GLOB M3D_INITIALIZER_SRCS
         src/4OverlapEstimator.cpp
         src/4GraphInitializer.cpp)
 
+# glad.c
+file(GLOB M3D_GLAD_SRCS
+        3rd/glad/src/glad.c)
+
 # m3d panorama warper after optimization.
 file(GLOB M3D_WARPER_SRCS
-        3rd/glad/src/glad.c
         src/6OpenglManagerForWarper.cpp
         src/6PanoramaWarper.cpp)
 
@@ -73,7 +75,10 @@ file(GLOB M3D_STITCHER_SRCS
 file(GLOB M3D_CONTENT_SRCS
         src/8BackLayerContentGenerator.cpp)
 
-
+# m3d 3d viewer.
+file(GLOB M3D_3DVIEWER_SRCS
+        src/9generateTrianglesFromPanorama.cpp
+        src/9Viewer.cpp)
 
 # ==============================================================================
 # ==============================================================================

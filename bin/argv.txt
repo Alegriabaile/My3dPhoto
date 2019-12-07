@@ -1,4 +1,4 @@
-/home/ale/CLionProjects/My3dPhoto/zedDataDir/20191119151552
+/home/ale/CLionProjects/My3dPhoto/zedDataDir/20191119151552s2
 1
 
 /home/ale/CLionProjects/My3dPhoto/zedDataDir/20191113171050s1

@@ -24,24 +24,25 @@ int main(int argc, char** argv)
     return 0;
 }
 
-#include "backProject2PclPc.h"
 using namespace cv;
 using namespace std;
-using namespace pcl;
 
 void debug(m3d::Frame &result)
 {
     //generate back layers.
     m3d::BackLayerContentGenerator backLayerContentGenerator(result);
     //debug...
-    size_t minH = m3d::Frame::PANO_H - 1;
+    size_t H = m3d::Frame::PANO_H;
+    size_t W = m3d::Frame::PANO_W;
+
+    size_t minH = H - 1;
     size_t maxH = 0;
-    size_t minW = m3d::Frame::PANO_W - 1;
+    size_t minW = W - 1;
     size_t maxW = 0;
 
-    for(size_t h = 0; h < m3d::Frame::PANO_H; ++h)
+    for(size_t h = 0; h < H; ++h)
     {
-        for(size_t w = 0; w < m3d::Frame::PANO_W; ++w)
+        for(size_t w = 0; w < W; ++w)
         {
             if(!(result.pano_depth.at<float>(h,w) > 0))
                 continue;
@@ -58,6 +59,11 @@ void debug(m3d::Frame &result)
         }
     }
 
+    cv::Mat &pano_image_f = result.pano_image;
+    cv::Mat &pano_depth_f = result.pano_depth;
+    cv::Mat &pano_image_b = result.pano_image_b;
+    cv::Mat &pano_depth_b = result.pano_depth_b;
+
     cv::imshow("front image", result.pano_image(cv::Range(minH, maxH + 1), cv::Range(minW, maxW + 1)));
     cv::imshow("front depth", result.pano_depth(cv::Range(minH, maxH + 1), cv::Range(minW, maxW + 1)));
     cv::imshow("back image", result.pano_image_b(cv::Range(minH, maxH + 1), cv::Range(minW, maxW + 1)));
@@ -66,7 +72,27 @@ void debug(m3d::Frame &result)
     //save, or show results.
     //saving to jpg+png rgbd image and rendering from them is faster than rendering from .obj
     //todo
+    pano_depth_f.convertTo(pano_depth_f, CV_16UC1);
+    pano_depth_b.convertTo(pano_depth_b, CV_16UC1);
 
+    std::string namePrefix("debug8/");
+    cv::imwrite(namePrefix + "pano_image_f.jpg", pano_image_f);
+    cv::imwrite(namePrefix + "pano_image_b.jpg", pano_image_b);
+
+    cv::imwrite(namePrefix + "pano_depth_f.png", pano_depth_f);
+    cv::imwrite(namePrefix + "pano_depth_b.png", pano_depth_b);
+
+    cv::Mat pano_image = cv::Mat(W, W, CV_8UC3, cv::Scalar(0, 0, 0));
+    cv::Mat pano_depth = cv::Mat(W, W, CV_16UC1, cv::Scalar(0));
+
+    pano_image(cv::Range(0, H), cv::Range::all()) = pano_image_f;
+    pano_image(cv::Range(H, W), cv::Range::all()) = pano_image_b;
+
+    pano_depth(cv::Range(0, H), cv::Range::all()) = pano_depth_f;
+    pano_depth(cv::Range(H, W), cv::Range::all()) = pano_depth_b;
+
+    cv::imwrite(namePrefix + "pano_image.jpg", pano_image);
+    cv::imwrite(namePrefix + "pano_depth.png", pano_depth);
 }
 
 void compute(int argc, char** argv, m3d::Frame &result)

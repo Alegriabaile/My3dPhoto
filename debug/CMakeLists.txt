@@ -21,16 +21,17 @@ target_link_libraries(debug4GraphInitializer m3dbase ${OpenCV_LIBS} ${PCL_LIBRAR
 add_executable(debug5PoseNLLSOptimizer debug5PoseNLLSOptimizer.cpp ${M3D_INITIALIZER_SRCS})
 target_link_libraries(debug5PoseNLLSOptimizer m3dbase ${OpenCV_LIBS} ${PCL_LIBRARIES} ${CERES_LIBRARIES})
 
-add_executable(debug6PanoramaWarper debug6PanoramaWarper.cpp ${M3D_INITIALIZER_SRCS} ${M3D_WARPER_SRCS})
+add_executable(debug6PanoramaWarper debug6PanoramaWarper.cpp ${M3D_INITIALIZER_SRCS} ${M3D_WARPER_SRCS} ${M3D_GLAD_SRCS})
 target_link_libraries(debug6PanoramaWarper m3dbase ${OpenCV_LIBS} ${PCL_LIBRARIES} ${CERES_LIBRARIES} glfw libGL.so)
 
-add_executable(debug7PanoramaStitcher debug7PanoramaStitcher.cpp ${M3D_INITIALIZER_SRCS} ${M3D_WARPER_SRCS} ${M3D_STITCHER_SRCS} )
+add_executable(debug7PanoramaStitcher debug7PanoramaStitcher.cpp ${M3D_INITIALIZER_SRCS} ${M3D_WARPER_SRCS} ${M3D_STITCHER_SRCS} ${M3D_GLAD_SRCS} )
 target_link_libraries(debug7PanoramaStitcher m3dbase ${OpenCV_LIBS} ${PCL_LIBRARIES} ${CERES_LIBRARIES} glfw libGL.so)
 
-add_executable(debug8BackLayerContentGenerator debug8BackLayerContentGenerator.cpp ${M3D_INITIALIZER_SRCS} ${M3D_WARPER_SRCS} ${M3D_STITCHER_SRCS} ${M3D_CONTENT_SRCS})
+add_executable(debug8BackLayerContentGenerator debug8BackLayerContentGenerator.cpp ${M3D_INITIALIZER_SRCS} ${M3D_WARPER_SRCS} ${M3D_STITCHER_SRCS} ${M3D_CONTENT_SRCS} ${M3D_GLAD_SRCS})
 target_link_libraries(debug8BackLayerContentGenerator m3dbase ${OpenCV_LIBS} ${PCL_LIBRARIES} ${CERES_LIBRARIES} glfw libGL.so)
 
-
+add_executable(debug9Viewer debug9Viewer.cpp ${M3D_3DVIEWER_SRCS} ${M3D_GLAD_SRCS})
+target_link_libraries(debug9Viewer ${OpenCV_LIBS} glfw libGL.so)
 
 # pcl error... debug...
 #add_executable(debugPclLib debugPclLib.cpp)
