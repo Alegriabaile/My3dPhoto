@@ -18,7 +18,7 @@ namespace m3d
     const unsigned int SCR_HEIGHT = 600;
 
     // camera
-    CameraForViewer camera(glm::vec3(0.0f, 0.0f, 3.0f));
+    CameraForViewer camera;//(glm::vec3(0.0f, 0.0f, 0.0f));
     float lastX = SCR_WIDTH / 2.0f;
     float lastY = SCR_HEIGHT / 2.0f;
     bool firstMouse = true;
@@ -145,50 +145,50 @@ namespace m3d
 
     void Viewer::InitShader()
     {
-        std::string VertexCode("#version 330 core                                              \n"
-                               "                                                               \n"
-                               "layout (location = 0) in vec3 attributePos;                    \n"
-                               "                                                               \n"
-                               "uniform mat4 model;                                            \n"
-                               "uniform mat4 view;                                             \n"
-                               "uniform mat4 projection;                                       \n"
-                               "uniform float panoW;                                           \n"
-                               "                                                               \n"
-                               "out vec2 UV;                                                   \n"
-                               "                                                               \n"
-                               "void main()                                                    \n"
-                               "{                                                              \n"
-                               "    const float PI = 3.1415926535897932384626433832795;        \n"
-                               "    float w = attributePos.x;                                  \n"
-                               "    float h = attributePos.y;                                  \n"
-                               "    float r = attributePos.z;                                  \n"
-                               "                                                               \n"
-                               "    float theta = h / panoW * 2.0 * PI;                        \n"
-                               "    if(theta > PI)                                             \n"
-                               "        theta = theta - PI;                                    \n"
-                               "    float phi = w / panoW * 2.0 * PI;                          \n"
-                               "                                                               \n"
-                               "    float x = r * sin(theta) * cos(phi);                       \n"
-                               "    float y = r * sin(theta) * sin(phi);                       \n"
-                               "    float z = r * cos(theta);                                  \n"
-                               "    gl_Position = projection*view*model*vec4(x, y, z, 1.0f);   \n"
-                               "                                                               \n"
-                               "    float u = (w + 0.5)/panoW;                                 \n"
-                               "    float v = 1.0f - (h + 0.5)/panoW;                          \n"
-                               "    UV = vec2(u, v);                                           \n"
-                               "}                                                              \n");
+        std::string VertexCode("#version 330 core                                                    \n"
+                               "                                                                     \n"
+                               "layout (location = 0) in vec3 attributePos;                          \n"
+                               "                                                                     \n"
+                               "uniform mat4 model;                                                  \n"
+                               "uniform mat4 view;                                                   \n"
+                               "uniform mat4 projection;                                             \n"
+                               "uniform float panoW;                                                 \n"
+                               "                                                                     \n"
+                               "out vec2 UV;                                                         \n"
+                               "                                                                     \n"
+                               "void main()                                                          \n"
+                               "{                                                                    \n"
+                               "    const float PI = 3.1415926535897932384626433832795;              \n"
+                               "    float w = attributePos.x;                                        \n"
+                               "    float h = attributePos.y;                                        \n"
+                               "    float r = attributePos.z;                                        \n"
+                               "                                                                     \n"
+                               "    float theta = h / panoW * 2.0 * PI;                              \n"
+                               "    if(theta > PI)                                                   \n"
+                               "        theta = theta - PI;                                          \n"
+                               "    float phi = 2.0 * PI - w / panoW * 2.0 * PI;                     \n"
+                               "                                                                     \n"
+                               "    float x_ = r * sin(theta) * cos(phi);                            \n"
+                               "    float y_ = r * sin(theta) * sin(phi);                            \n"
+                               "    float z_ = r * cos(theta);                                       \n"
+                               "    gl_Position = projection*view*model*vec4(-x_, -z_, -y_, 1.0f);   \n"
+                               "                                                                     \n"
+                               "    float u = (w + 0.5)/panoW;                                       \n"
+                               "    float v = 1.0f - (h + 0.5)/panoW;                                \n"
+                               "    UV = vec2(u, v);                                                 \n"
+                               "}                                                                    \n");
 
-        std::string FragmentCode("#version 330 core                                              \n"
-                                 "                                                               \n"
-                                 "in vec2 UV;                                                    \n"
-                                 "out vec4 FragColor;                                            \n"
-                                 "                                                               \n"
-                                 "uniform sampler2D colorTexture;                                \n"
-                                 "                                                               \n"
-                                 "void main()                                                    \n"
-                                 "{                                                              \n"
-                                 "    FragColor = texture(colorTexture, UV.xy);                  \n"
-                                 "}                                                              \n");
+        std::string FragmentCode("#version 330 core                                                    \n"
+                                 "                                                                     \n"
+                                 "in vec2 UV;                                                          \n"
+                                 "out vec4 FragColor;                                                  \n"
+                                 "                                                                     \n"
+                                 "uniform sampler2D colorTexture;                                      \n"
+                                 "                                                                     \n"
+                                 "void main()                                                          \n"
+                                 "{                                                                    \n"
+                                 "    FragColor = texture(colorTexture, UV.xy);                        \n"
+                                 "}                                                                    \n");
 
         //color
         shaderForViewer.init(VertexCode, FragmentCode);
@@ -226,9 +226,14 @@ namespace m3d
 
     void Viewer::draw()
     {
+        //debug...
+//        float vecs[9] =
+
+
+
         // configure global opengl state
         glEnable(GL_DEPTH_TEST);
-        glEnable(GL_CULL_FACE);
+//        glEnable(GL_CULL_FACE);
 
         shaderForViewer.use();
 
@@ -242,7 +247,7 @@ namespace m3d
             // input
             processInput(window);
 
-            glClearColor(0.05f, 0.05f, 0.05f, 1.0f);
+            glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
             glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
             // view/projection transformations
@@ -293,6 +298,11 @@ namespace m3d
             camera.ProcessKeyboard(LEFT, deltaTime);
         if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
             camera.ProcessKeyboard(RIGHT, deltaTime);
+
+        if (glfwGetKey(window, GLFW_KEY_SPACE) == GLFW_PRESS)
+            camera.Reset();
+
+//        printf("processInput\n");
     }
 
     // glfw: whenever the window size changed (by OS or user resize) this callback function executes
@@ -322,6 +332,8 @@ namespace m3d
         lastY = ypos;
 
         camera.ProcessMouseMovement(xoffset, yoffset);
+
+//        printf("mouse_callback: %lf, %lf \n", xpos, ypos);
     }
 
     // glfw: whenever the mouse scroll wheel scrolls, this callback is called

@@ -18,10 +18,10 @@ namespace m3d {
         const float W = pano_depth.cols;
 
         out.clear();
-        out.reserve((H - 1) * (W - 1) * 6 * 3);
+        out.reserve((H - 1) * (W - 1) * 3);//* 6 * 3);
 
         float x, y, r;//3d coordinates and uv texture coordinates
-        for (float h = 0; h < W - 1; ++h) {
+        for (float h = 0; h < H - 1; ++h) {
             for (float w = 0; w < W - 1; ++w) {
                 //参考了 https://github.com/simonfuhrmann/mve/blob/master/libs/mve/depthmap.cc#L211
                 //0 1
