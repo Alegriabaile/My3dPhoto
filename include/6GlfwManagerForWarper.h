@@ -50,6 +50,15 @@ namespace m3d
             glfwTerminate();
         }
 
+        void checkError()
+        {
+            GLenum err;
+            while((err = glGetError()) != GL_NO_ERROR)
+            {
+                printf(" GlfwManagerForWarper::checkError() :    err == %d \n", err);
+            }
+        }
+
     };
 }
 

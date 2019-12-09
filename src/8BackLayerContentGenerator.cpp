@@ -54,8 +54,8 @@ namespace m3d
     void BackLayerContentGenerator::_DEBUG_ShowResults(const m3d::Frame &result_)
     {
         cv::imshow("front image", result_.pano_image(cv::Range(minH, maxH + 1), cv::Range(minW, maxW + 1)));
-        cv::imshow("front depth", result_.pano_depth(cv::Range(minH, maxH + 1), cv::Range(minW, maxW + 1))/10000.0f);
-        cv::imshow("back depth", result_.pano_depth_b(cv::Range(minH, maxH + 1), cv::Range(minW, maxW + 1))/10000.0f);
+        cv::imshow("front depth", result_.pano_depth(cv::Range(minH, maxH + 1), cv::Range(minW, maxW + 1))/7000.0f);
+        cv::imshow("back depth", result_.pano_depth_b(cv::Range(minH, maxH + 1), cv::Range(minW, maxW + 1))/7000.0f);
         cv::imshow("back mask", blocked(cv::Range(minH, maxH + 1), cv::Range(minW, maxW + 1)));
         cv::waitKey();
     }
@@ -65,14 +65,16 @@ namespace m3d
         const size_t H = pano_depth_ref.rows;
         const size_t W = pano_depth_ref.cols;
 
-        if( h == 0 || h >= H || w == 0 || w >= W)
+        if( h == 0 || h >= H - 1 || w == 0 || w >= W - 1)
         {
             std::cout<<"BackLayerContentGenerator::MaxFilter(): h/w is out of ragne"<<std::endl;
             exit(-1);
         }
 
-        float curVal = pano_depth_ref.at<float>(h, w);
-        if(blocked.at<uchar>(h, w) || !(curVal > 0))
+//        float curValRef = std::max(pano_depth_ref.at<float>(h, w), pano_depth_b.at<float>(h, w));
+//        float curValBack = pano_depth_b.at<float>(h, w);
+        float curValRef = pano_depth_ref.at<float>(h, w);
+        if(blocked.at<uchar>(h, w) || !(curValRef > 0))
             return;
 
         size_t hs[4] = {h - 1, h, h + 1, h};
@@ -81,15 +83,16 @@ namespace m3d
         bool isBlocked[4];
         for(size_t i = 0; i < 4; ++ i)
         {
+//            values[i] = std::max(pano_depth_ref.at<float>(hs[i], ws[i]), pano_depth_b.at<float>(hs[i], ws[i]));
             values[i] = pano_depth_b.at<float>(hs[i], ws[i]);
             isBlocked[i] = blocked.at<uchar>(hs[i], ws[i]);
         }
 
         for(size_t i = 0; i < 4; ++i)
         {
-            if(values[i] >= curVal || isBlocked[i])
+            if(values[i] > curValRef)// || isBlocked[i])
                 continue;
-            pano_depth_b.at<float>(hs[i], ws[i]) = curVal;
+            pano_depth_b.at<float>(hs[i], ws[i]) = curValRef;
         }
 
     }
@@ -119,7 +122,6 @@ namespace m3d
 
         //initialize.
         blocked = cv::Mat(H, W, CV_8UC1, cv::Scalar(0));
-        float values[4];
         for(size_t h = 1; h < H - 1; ++h)
         {
             for(size_t w = 1; w < W - 1; ++w)
@@ -132,19 +134,23 @@ namespace m3d
                 float minVal = 65500.0f;
                 for(size_t i = 0; i < 4; ++i)
                 {
-                    values[i] = pano_depth_f.at<float>(hs[i], ws[i]);
-                    maxVal = (maxVal > values[i]) ? maxVal : values[i];
-                    minVal = (minVal < values[i]) ? minVal : values[i];
+
+//                    float minValue = std::fmin(pano_depth_f.at<float>(hs[i], ws[i]), pano_depth_b.at<float>(hs[i], ws[i]));
+//                    float maxValue = std::fmax(pano_depth_f.at<float>(hs[i], ws[i]), pano_depth_b.at<float>(hs[i], ws[i]));
+                    float value = pano_depth_f.at<float>(hs[i], ws[i]);
+                    maxVal = (maxVal > value) ? maxVal : value;
+                    minVal = (minVal < value) ? minVal : value;
                 }
 
-                if( curVal > minVal)
-                {
-                    if( (curVal - minVal) > (0.02 * minVal))
-                    {
-                        pano_depth_b.at<float>(h, w) = curVal;
-                        blocked.at<uchar>(h, w) = 255;
-                    }
-                }else if((maxVal - curVal) > (0.02 * curVal))
+//                if( curVal > minVal)
+//                {
+//                    if( (curVal - minVal) > (0.05 * minVal))
+//                    {
+//                        pano_depth_b.at<float>(h, w) = curVal;
+//                        blocked.at<uchar>(h, w) = 255;
+//                    }
+//                }
+                if((maxVal - curVal) > (0.05 * curVal) || (curVal - minVal) > (0.05 * minVal))
                     pano_depth_b.at<float>(h, w) = maxVal;
             }
         }
@@ -187,6 +193,7 @@ namespace m3d
     {
         cv::Mat mask = result_.pano_depth_b > 0;
         cv::inpaint(result_.pano_image, mask, result_.pano_image_b, 3, CV_INPAINT_NS);
+//        result_.pano_image_b.setTo(cv::Scalar(255, 255, 0), mask);
     }
 
     void BackLayerContentGenerator::GenerateContent(m3d::Frame &result_)

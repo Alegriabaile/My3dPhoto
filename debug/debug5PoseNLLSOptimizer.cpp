@@ -75,6 +75,9 @@ void run(int argc, char** argv)
         std::cout<<std::endl;
     }
 
+    
+    cv::imshow("OpenCV controllor", cv::Mat(100, 100, CV_8UC3, cv::Scalar(255,255,255)));
+    
     pcl::visualization::CloudViewer viewer("pcl viewer");
     const std::vector<bool> &activatedFrames = graph.activatedFrames;
     const size_t sz = frames.size();
@@ -104,7 +107,7 @@ void run(int argc, char** argv)
         *cloud1 += *cloud2;
         cloud2->clear();
 
-        cv::waitKey(3000);
+        cv::waitKey();
         viewer.showCloud(cloud1);
     }
 

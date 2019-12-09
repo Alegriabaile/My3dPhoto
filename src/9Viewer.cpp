@@ -247,7 +247,7 @@ namespace m3d
             // input
             processInput(window);
 
-            glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
+            glClearColor(0.5f, 0.1f, 0.1f, 1.0f);
             glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
             // view/projection transformations
