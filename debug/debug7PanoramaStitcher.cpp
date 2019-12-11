@@ -14,7 +14,7 @@
 #include "4GraphInitializer.h"
 #include "5DepthDeformer.h"
 #include "5PoseNLLSOptimizer.h"
-#include "6PanoramaWarper.h"
+#include "6PanoramaCapturer.h"
 #include "7PanoramaStitcher.h"
 
 void run(int argc, char** argv);
@@ -57,7 +57,7 @@ void run(int argc, char** argv)
     m3d::RigidProblem rigidProblem(frames, graph, argv[0]);
 
     //warpToPanorama
-    m3d::PanoramaWarper panoramaWarper(frames);
+    m3d::PanoramaCapturer panoramaCapturer(graph, frames);
 
     //stitch panoramas to result.
     m3d::Frame result;

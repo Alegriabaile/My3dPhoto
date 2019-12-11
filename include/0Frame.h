@@ -17,6 +17,7 @@ namespace m3d
         State(unsigned int id_ = 0): id(id_){}
         ~State(){}
     };
+
     class Frame
     {
     public:
@@ -36,14 +37,13 @@ namespace m3d
         cv::Mat pano_image_b, pano_depth_b;
         cv::Mat pano_label, pano_label_bgr;
 
-        Frame() = default;
-
-        virtual ~Frame() {};
-
-
         static IntrinsicD intrinsicD;
         static const size_t PANO_W;
         static const size_t PANO_H;
+
+
+        Frame() = default;
+        virtual ~Frame() {};
     };
 
 

@@ -67,6 +67,12 @@ file(GLOB M3D_WARPER_SRCS
         src/6OpenglManagerForWarper.cpp
         src/6PanoramaWarper.cpp)
 
+# m3d panorama capturer after optimization.
+file(GLOB M3D_PANOCAPTURER_SRCS
+        src/6CubemapCapturer.cpp
+        src/6Cubemap2Sphere.cpp
+        src/6PanoramaCapturer.cpp)
+
 # m3d panorama stitcher.
 file(GLOB M3D_STITCHER_SRCS
         src/7PanoramaStitcher.cpp)

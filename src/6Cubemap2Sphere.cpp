@@ -80,6 +80,30 @@ namespace m3d
         }
 
         glBindFramebuffer(GL_FRAMEBUFFER, 0);
+        
+        
+        
+        //read the results.
+        cv::Mat pixel_color(HEIGHT, WIDTH, CV_8UC4, cv::Scalar(0, 0, 0, 0));
+        cv::Mat pixel_depth(HEIGHT, WIDTH, CV_32FC1, cv::Scalar(0.0f, 1.0f, 1.0f, 1.0f));
+
+        //bind pano framebuffer
+        glBindFramebuffer(GL_FRAMEBUFFER, sphereFrameBuffer);
+
+        glReadBuffer ( GL_COLOR_ATTACHMENT0 );
+        glReadPixels(0, 0, pixel_color.cols, pixel_color.rows, GL_RGBA, GL_UNSIGNED_BYTE, pixel_color.data);
+        checkError("Cubemap2Sphere::showResults(): after read color buffer: ");
+
+        glReadBuffer ( GL_COLOR_ATTACHMENT1 );
+        glReadPixels(0, 0, pixel_depth.cols, pixel_depth.rows, GL_RED, GL_FLOAT, pixel_depth.data);
+        checkError("Cubemap2Sphere::showResults(): after read depth buffer: ");
+        //unbind pano framebuffer
+        glBindFramebuffer(GL_FRAMEBUFFER, 0);
+
+
+        cv::cvtColor(pixel_color, pano_image, cv::COLOR_RGBA2BGR);
+        cv::flip(pano_image, pano_image, 0);
+        cv::flip(pixel_depth, pano_depth, 0);
     }
 
     void Cubemap2Sphere::InitFrameBuffers()
@@ -108,15 +132,6 @@ namespace m3d
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
         glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT1, GL_TEXTURE_2D, depthAttachment, 0);
         checkError("Cubemap2Sphere::InitFrameBuffers(): after generate depth texture[i]: ");
-
-        glGenRenderbuffers(1, &sphereFrameBuffer);
-        glBindRenderbuffer(GL_RENDERBUFFER, sphereFrameBuffer);
-        glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH32F_STENCIL8, WIDTH, HEIGHT); // use a single renderbuffer object for both a depth AND stencil buffer.
-        glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_RENDERBUFFER, sphereFrameBuffer); // now actually attach it
-
-        // now that we actually created the framebuffer and added all attachments we want to check if it is actually complete now
-        if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
-            printf("OpenglManagerForWarper::GenerateFbos(): ERROR::FRAMEBUFFER:: Framebuffer is not complete!  \n");
 
         glGenRenderbuffers(1, &sphereRenderBuffer);
         glBindRenderbuffer(GL_RENDERBUFFER, sphereRenderBuffer);
@@ -172,77 +187,73 @@ namespace m3d
                                         "                                                               \n"
                                         "void main()                                                    \n"
                                         "{                                                              \n"
+                                        "    //from 3rd/cube2equirect-master/shaders/cube2equirect.frag \n"
                                         "    float theta = UV.x * M_PI;                                 \n"
-                                        "    float phi = (UV.y * M_PI) / 2.0;                                     \n"
-                                        "\n"
-                                        "    float x = cos(phi) * sin(theta);\n"
-                                        "    float y = sin(phi);\n"
-                                        "    float z = cos(phi) * cos(theta);\n"
-                                        "\n"
-                                        "    float scale;\n"
-                                        "    vec2 px;\n"
-                                        "    vec4 src;\n"
-                                        "    vec4 src_depth;\n"
-                                        "\n"
-                                        "    if (abs(x) >= abs(y) && abs(x) >= abs(z)) {\n"
-                                        "      if (x < 0.0) {\n"
-                                        "        scale = -1.0 / x;\n"
-                                        "        px.x = ( z*scale + 1.0) / 2.0;\n"
-                                        "        px.y = ( y*scale + 1.0) / 2.0;\n"
-                                        "        src = texture(colorTexture3, px);\n"
-                                        "        src_depth = texture(depthTexture3, px);\n"
-                                        "      }\n"
-                                        "      else {\n"
-                                        "        scale = 1.0 / x;\n"
-                                        "        px.x = (-z*scale + 1.0) / 2.0;\n"
-                                        "        px.y = ( y*scale + 1.0) / 2.0;\n"
-                                        "        src = texture(colorTexture1, px);\n"
-                                        "        src_depth = texture(depthTexture1, px);\n"
-                                        "      }\n"
-                                        "    }\n"
-                                        "    else if (abs(y) >= abs(z)) {\n"
-                                        "      if (y < 0.0) {\n"
-                                        "        scale = -1.0 / y;\n"
-                                        "        px.x = ( x*scale + 1.0) / 2.0;\n"
-                                        "        px.y = ( z*scale + 1.0) / 2.0;\n"
-                                        "        src = texture(colorTexture5, px);\n"
-                                        "        src_depth = texture(depthTexture5, px);\n"
-                                        "      }\n"
-                                        "      else {\n"
-                                        "        scale = 1.0 / y;\n"
-                                        "        px.x = ( x*scale + 1.0) / 2.0;\n"
-                                        "        px.y = (-z*scale + 1.0) / 2.0;\n"
-                                        "        src = texture(colorTexture4, px);\n"
-                                        "        src_depth = texture(depthTexture4, px);\n"
-                                        "      }\n"
-                                        "    }\n"
-                                        "    else {\n"
-                                        "      if (z < 0.0) {\n"
-                                        "        scale = -1.0 / z;\n"
-                                        "        px.x = (-x*scale + 1.0) / 2.0;\n"
-                                        "        px.y = ( y*scale + 1.0) / 2.0;\n"
-                                        "        src = texture(colorTexture2, px);\n"
-                                        "        src_depth = texture(depthTexture2, px);\n"
-                                        "      }\n"
-                                        "      else {\n"
-                                        "        scale = 1.0 / z;\n"
-                                        "        px.x = ( x*scale + 1.0) / 2.0;\n"
-                                        "        px.y = ( y*scale + 1.0) / 2.0;\n"
-                                        "        src = texture(colorTexture0, px);\n"
-                                        "        src_depth = texture(depthTexture0, px);\n"
-                                        "      }\n"
-                                        "    }\n"
-                                        "\n"
-//                                        "    src = texture(colorTexture0, px);                          \n"
-//                                        "    colorAttachment = vec4(0.0f, 1.0f, 0.0f, 1.0f);\n"
-                                        "    colorAttachment = src;\n"
-                                        "    depthAttachment = src_depth;\n"
-//                                        "    depthAttachment = vec4(0.5f, 0.5f, 0.5f, 1.0f); \n"
+                                        "    float phi = (UV.y * M_PI) / 2.0;                           \n"
+                                        "                                                               \n"
+                                        "    float x = cos(phi) * sin(theta);                           \n"
+                                        "    float y = sin(phi);                                        \n"
+                                        "    float z = cos(phi) * cos(theta);                           \n"
+                                        "                                                               \n"
+                                        "    float scale;                                               \n"
+                                        "    vec2 px;                                                   \n"
+                                        "    vec4 src;                                                  \n"
+                                        "    vec4 src_depth;                                            \n"
+                                        "                                                               \n"
+                                        "    if (abs(x) >= abs(y) && abs(x) >= abs(z)) {                \n"
+                                        "      if (x < 0.0) {                                           \n"
+                                        "        scale = -1.0 / x;                                      \n"
+                                        "        px.x = ( z*scale + 1.0) / 2.0;                         \n"
+                                        "        px.y = ( y*scale + 1.0) / 2.0;                         \n"
+                                        "        src = texture(colorTexture3, px);                      \n"
+                                        "        src_depth = texture(depthTexture3, px);                \n"
+                                        "      }                                                        \n"
+                                        "      else{                                                    \n"
+                                        "        scale = 1.0 / x;                                       \n"
+                                        "        px.x = (-z*scale + 1.0) / 2.0;                         \n"
+                                        "        px.y = ( y*scale + 1.0) / 2.0;                         \n"
+                                        "        src = texture(colorTexture1, px);                      \n"
+                                        "        src_depth = texture(depthTexture1, px);                \n"
+                                        "      }                                                        \n"
+                                        "    }                                                          \n"
+                                        "    else if (abs(y) >= abs(z)) {                               \n"
+                                        "      if (y < 0.0) {                                           \n"
+                                        "        scale = -1.0 / y;                                      \n"
+                                        "        px.x = ( x*scale + 1.0) / 2.0;                         \n"
+                                        "        px.y = ( z*scale + 1.0) / 2.0;                         \n"
+                                        "        src = texture(colorTexture5, px);                      \n"
+                                        "        src_depth = texture(depthTexture5, px);                \n"
+                                        "      }                                                        \n"
+                                        "      else {                                                   \n"
+                                        "        scale = 1.0 / y;                                       \n"
+                                        "        px.x = ( x*scale + 1.0) / 2.0;                         \n"
+                                        "        px.y = (-z*scale + 1.0) / 2.0;                         \n"
+                                        "        src = texture(colorTexture4, px);                      \n"
+                                        "        src_depth = texture(depthTexture4, px);                \n"
+                                        "      }                                                        \n"
+                                        "    }                                                          \n"
+                                        "    else {                                                     \n"
+                                        "      if (z < 0.0) {                                           \n"
+                                        "        scale = -1.0 / z;                                      \n"
+                                        "        px.x = (-x*scale + 1.0) / 2.0;                         \n"
+                                        "        px.y = ( y*scale + 1.0) / 2.0;                         \n"
+                                        "        src = texture(colorTexture2, px);                      \n"
+                                        "        src_depth = texture(depthTexture2, px);                \n"
+                                        "      }                                                        \n"
+                                        "      else {                                                   \n"
+                                        "        scale = 1.0 / z;                                       \n"
+                                        "        px.x = ( x*scale + 1.0) / 2.0;                         \n"
+                                        "        px.y = ( y*scale + 1.0) / 2.0;                         \n"
+                                        "        src = texture(colorTexture0, px);                      \n"
+                                        "        src_depth = texture(depthTexture0, px);                \n"
+                                        "      }                                                        \n"
+                                        "    }                                                          \n"
+                                        "                                                               \n"
+                                        "    colorAttachment = src;                                     \n"
+                                        "    depthAttachment = src_depth;                               \n"
                                         "}                                                              \n");
-
         //color
         shaderForWarper.init(sphereVertexCode1, sphereFragmentCode1);
-
         checkError("Cubemap2Sphere::InitShader(): after Init shader: ");
     }
 
@@ -250,33 +261,6 @@ namespace m3d
 
     void Cubemap2Sphere::InitTextures()
     {
-//        GLuint GLTEXTUREIDs[12] = {GL_TEXTURE0, GL_TEXTURE1, GL_TEXTURE2, GL_TEXTURE3, GL_TEXTURE4, GL_TEXTURE5,
-//                                   GL_TEXTURE6, GL_TEXTURE7, GL_TEXTURE8, GL_TEXTURE9, GL_TEXTURE10, GL_TEXTURE11};
-//
-//        GLuint sphereFrameBuffer_AttatchDepth;
-//        glGenFramebuffers(1, &sphereFrameBuffer_AttatchDepth);
-//        glBindFramebuffer(GL_FRAMEBUFFER, sphereFrameBuffer_AttatchDepth);
-//
-//        for()
-//        glGenTextures(1, &colorTex2d);
-//        glBindTexture(GL_TEXTURE_2D, colorTex2d);
-//        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, WIDTH, HEIGHT, 0, GL_RGBA,  GL_UNSIGNED_BYTE, NULL);
-//        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-//        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-//        glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, colorTex2d, 0);
-//        checkError("Cubemap2Sphere::InitTextures(): after generate color texture: ");
-//
-//        //>>>>>>>>>>>>>>>>>>>>>>depth texture attachment<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<//
-//        glGenTextures(1, &depthTex2d);
-//        glBindTexture(GL_TEXTURE_2D, depthTex2d);
-//        glTexImage2D(GL_TEXTURE_2D, 0, GL_R32F, WIDTH, HEIGHT, 0, GL_RED,  GL_FLOAT, NULL);
-//        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-//        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-//        glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT1, GL_TEXTURE_2D, depthTex2d, 0);
-//        checkError("Cubemap2Sphere::InitTextures(): after generate depth texture: ");
-//
-//        glBindTexture(GL_TEXTURE_2D, 0);
-//        glBindFramebuffer(GL_FRAMEBUFFER, 0);
     }
 
     void Cubemap2Sphere::InitVertices()
@@ -325,20 +309,26 @@ namespace m3d
         cv::Mat pixel_color(HEIGHT, WIDTH, CV_8UC4, cv::Scalar(0, 0, 0, 0));
         cv::Mat pixel_depth(HEIGHT, WIDTH, CV_32FC1, cv::Scalar(0.0f, 1.0f, 1.0f, 1.0f));
 
+
+        //bind pano framebuffer
         glBindFramebuffer(GL_FRAMEBUFFER, sphereFrameBuffer);
 
         glReadBuffer ( GL_COLOR_ATTACHMENT0 );
         glReadPixels(0, 0, pixel_color.cols, pixel_color.rows, GL_RGBA, GL_UNSIGNED_BYTE, pixel_color.data);
         checkError("Cubemap2Sphere::showResults(): after read color buffer: ");
 
+        glReadBuffer ( GL_COLOR_ATTACHMENT1 );
+        glReadPixels(0, 0, pixel_depth.cols, pixel_depth.rows, GL_RED, GL_FLOAT, pixel_depth.data);
+        checkError("Cubemap2Sphere::showResults(): after read depth buffer: ");
+        //unbind pano framebuffer
+        glBindFramebuffer(GL_FRAMEBUFFER, 0);
+
+
+
         cv::Mat color_tmp;// = pixel_color.clone();
         cv::cvtColor(pixel_color, color_tmp, cv::COLOR_RGBA2BGR);
         cv::flip(color_tmp, color_tmp, 0);
         cv::imshow("color", color_tmp);
-
-        glReadBuffer ( GL_COLOR_ATTACHMENT1 );
-        glReadPixels(0, 0, pixel_depth.cols, pixel_depth.rows, GL_RED, GL_FLOAT, pixel_depth.data);
-        checkError("Cubemap2Sphere::showResults(): after read depth buffer: ");
 
         double minV, maxV;
         minMaxLoc(pixel_depth, &minV, &maxV);
@@ -346,9 +336,6 @@ namespace m3d
 
         cv::flip(pixel_depth, pixel_depth, 0);
         cv::imshow("depth", pixel_depth);
-
-        //unbind pano framebuffer
-        glBindFramebuffer(GL_FRAMEBUFFER, 0);
         cv::waitKey();
     }
 

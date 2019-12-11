@@ -69,6 +69,7 @@ namespace m3d
         glBindTexture(GL_TEXTURE_2D, depthTex2d);
         glTexImage2D(GL_TEXTURE_2D, 0, GL_R32F, depth.cols, depth.rows, 0, GL_RED, GL_FLOAT, depth.data);
         checkError("CubemapCapturer::draw(): after initialize the textures. ");
+        glBindTexture(GL_TEXTURE_2D, 0);
 
         glEnable(GL_DEPTH_TEST);
 
@@ -85,7 +86,7 @@ namespace m3d
             glBindTexture(GL_TEXTURE_2D, depthTex2d);
 
             glViewport(0, 0, SIDELENGTH, SIDELENGTH);
-            glClearColor(1.0f, 1.0f, 0.0f, 1.0f);
+            glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
             glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
             shaderForWarper.use();
@@ -128,6 +129,8 @@ namespace m3d
             glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, SIDELENGTH, SIDELENGTH, 0, GL_RGBA,  GL_UNSIGNED_BYTE, NULL);
             glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
             glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
             glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, colorAttachments[i], 0);
             checkError("CubemapCapturer::InitFrameBuffers(): after generate color texture[i]: ");
 
@@ -137,6 +140,8 @@ namespace m3d
             glTexImage2D(GL_TEXTURE_2D, 0, GL_R32F, SIDELENGTH, SIDELENGTH, 0, GL_RED,  GL_FLOAT, NULL);
             glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
             glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
             glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT1, GL_TEXTURE_2D, depthAttachments[i], 0);
             checkError("CubemapCapturer::InitFrameBuffers(): after generate depth texture[i]: ");
 
@@ -227,6 +232,8 @@ namespace m3d
         glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, SIDELENGTH, SIDELENGTH, 0, GL_RGBA,  GL_UNSIGNED_BYTE, NULL);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
         glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, colorTex2d, 0);
         checkError("CubemapCapturer::InitTextures(): after generate color texture: ");
 
@@ -236,6 +243,8 @@ namespace m3d
         glTexImage2D(GL_TEXTURE_2D, 0, GL_R32F, SIDELENGTH, SIDELENGTH, 0, GL_RED,  GL_FLOAT, NULL);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
         glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT1, GL_TEXTURE_2D, depthTex2d, 0);
         checkError("CubemapCapturer::InitTextures(): after generate depth texture: ");
 
