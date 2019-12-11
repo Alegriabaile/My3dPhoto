@@ -9,7 +9,7 @@
 #include <opencv2/opencv.hpp>
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
-#include "6ShaderForWarper.h"
+#include "6ShaderForCapturer.h"
 
 namespace m3d
 {
@@ -26,7 +26,7 @@ namespace m3d
         GLuint vao, vbo;
 //        glm::mat4 modelMat, viewMat, projectionMat;
 
-        ShaderForWarper shaderForWarper;
+        ShaderForCapturer shaderForCapturer;
 
         std::vector<float> vertices;
         //to debug...

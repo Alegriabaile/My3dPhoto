@@ -128,7 +128,7 @@ namespace m3d
 
     void PanoramaCapturer::GeneratePanoramasFromScenes()
     {
-        m3d::GlfwManagerForWarper glfwManagerForWarper;
+        m3d::GlfwManagerForCapturer glfwManagerForCapturer;
         m3d::CubemapCapturer cubemapCapturer(m3d::Frame::PANO_H);
         m3d::Cubemap2Sphere cubemap2Sphere(m3d::Frame::PANO_H, m3d::Frame::PANO_W);
 

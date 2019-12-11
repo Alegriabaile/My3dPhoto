@@ -2,7 +2,7 @@
 // Created by ale on 19-12-9.
 //
 
-#include "6GlfwManagerForWarper.h"
+#include "6GlfwManagerForCapturer.h"
 #include "6CubemapCapturer.h"
 #include "6Cubemap2Sphere.h"
 //using namespace cv;

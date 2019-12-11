@@ -9,7 +9,7 @@
 #include <opencv2/opencv.hpp>
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
-#include "6ShaderForWarper.h"
+#include "6ShaderForCapturer.h"
 
 namespace m3d
 {
@@ -23,7 +23,7 @@ namespace m3d
         GLuint cubemapFrameBuffers[6], cubemapRenderBuffer[6];
         GLuint colorAttachments[6], depthAttachments[6];//attachments.
 
-        ShaderForWarper shaderForWarper;
+        ShaderForCapturer shaderForCapturer;
 
         glm::mat4 modelMat, viewMats[6], projectionMat;
 

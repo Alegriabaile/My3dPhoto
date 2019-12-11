@@ -89,12 +89,12 @@ namespace m3d
             glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
             glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-            shaderForWarper.use();
-            shaderForWarper.setInt("colorTexture", 0);
-            shaderForWarper.setInt("depthTexture", 1);
-            shaderForWarper.setMat4("projection", projectionMat);
-            shaderForWarper.setMat4("view", viewMats[i]);
-            shaderForWarper.setMat4("model", modelMat);
+            shaderForCapturer.use();
+            shaderForCapturer.setInt("colorTexture", 0);
+            shaderForCapturer.setInt("depthTexture", 1);
+            shaderForCapturer.setMat4("projection", projectionMat);
+            shaderForCapturer.setMat4("view", viewMats[i]);
+            shaderForCapturer.setMat4("model", modelMat);
 
             glBindVertexArray(vao);
 
@@ -203,7 +203,7 @@ namespace m3d
                                         "}                                                              \n");
 
         //color
-        shaderForWarper.init(skyboxVertexCode1, skyboxFragmentCode1);
+        shaderForCapturer.init(skyboxVertexCode1, skyboxFragmentCode1);
 
         checkError("CubemapCapturer::InitShader(): after Init shader: ");
     }

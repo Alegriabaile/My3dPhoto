@@ -8,7 +8,7 @@
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 
-#include "9generateTrianglesFromPanorama.h"
+#include <opencv2/opencv.hpp>
 #include "9CameraForViewer.h"
 #include "9ShaderForViewer.h"
 
@@ -30,6 +30,7 @@ namespace m3d
         void checkGlError(const std::string step);
 
         void GetPanoRgbd(const std::string &dirName);
+        size_t generateTrianglesFromPanorama(const cv::Mat &pano_depth_, std::vector<float> &out);
         void GetTriangles();
 
         void InitGlfw();

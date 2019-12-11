@@ -42,7 +42,7 @@ namespace m3d
         glBindFramebuffer(GL_FRAMEBUFFER, sphereFrameBuffer);
         glDrawBuffers(2, attachments);
 
-        shaderForWarper.use();
+        shaderForCapturer.use();
         for(size_t i = 0; i < 6; i++)
         {
             // bind textures on corresponding texture units
@@ -54,8 +54,8 @@ namespace m3d
 
             std::string colorName = std::string("colorTexture") + std::to_string(i);
             std::string depthName = std::string("depthTexture") + std::to_string(i);
-            shaderForWarper.setInt( colorName.c_str(), i);
-            shaderForWarper.setInt( depthName.c_str(), i+6);
+            shaderForCapturer.setInt( colorName.c_str(), i);
+            shaderForCapturer.setInt( depthName.c_str(), i+6);
         }
         checkError("Cubemap2Sphere::draw(): after draw: ");
 
@@ -253,7 +253,7 @@ namespace m3d
                                         "    depthAttachment = src_depth;                               \n"
                                         "}                                                              \n");
         //color
-        shaderForWarper.init(sphereVertexCode1, sphereFragmentCode1);
+        shaderForCapturer.init(sphereVertexCode1, sphereFragmentCode1);
         checkError("Cubemap2Sphere::InitShader(): after Init shader: ");
     }
 

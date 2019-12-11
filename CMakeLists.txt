@@ -62,11 +62,6 @@ file(GLOB M3D_INITIALIZER_SRCS
 file(GLOB M3D_GLAD_SRCS
         3rd/glad/src/glad.c)
 
-# m3d panorama warper after optimization.
-file(GLOB M3D_WARPER_SRCS
-        src/6OpenglManagerForWarper.cpp
-        src/6PanoramaWarper.cpp)
-
 # m3d panorama capturer after optimization.
 file(GLOB M3D_PANOCAPTURER_SRCS
         src/6CubemapCapturer.cpp
@@ -83,7 +78,6 @@ file(GLOB M3D_CONTENT_SRCS
 
 # m3d 3d viewer.
 file(GLOB M3D_3DVIEWER_SRCS
-        src/9generateTrianglesFromPanorama.cpp
         src/9Viewer.cpp)
 
 # ==============================================================================

@@ -1,3 +1,6 @@
+/home/ale/CLionProjects/My3dPhoto/zedDataDir/20191119151552
+1
+
 /home/ale/CLionProjects/My3dPhoto/data/casual3d_data5
 1
 

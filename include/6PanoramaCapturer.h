@@ -2,7 +2,7 @@
 // Created by ale on 19-12-10.
 //
 #include "0m3d.h"
-#include "6GlfwManagerForWarper.h"
+#include "6GlfwManagerForCapturer.h"
 #include "6CubemapCapturer.h"
 #include "6Cubemap2Sphere.h"
 #ifndef MY3DPHOTO_6PANORAMACAPTURER_H
