@@ -35,6 +35,8 @@ namespace m3d
         double translations[2]; // delta_R, delta_t, delta越小说明越可靠
         std::vector<cv::KeyPoint> srcPts, dstPts;
 
+        cv::Mat essentialMask1, essentialMask2;
+
         Edge(){
             for(size_t i=0; i<6; ++i)
                 rts[i] = 0;

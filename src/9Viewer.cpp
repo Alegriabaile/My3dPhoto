@@ -196,6 +196,11 @@ namespace m3d
 
     void Viewer::InitResources()
     {
+        if(pano_image.empty())
+        {
+            std::cout<<"Viewer::InitResources(): pano_image.empty()!\n";
+            exit(-1);
+        }
         if(pano_depth.empty())
         {
             std::cout<<"Viewer::InitResources(): pano_depth.empty()!\n";
@@ -215,8 +220,16 @@ namespace m3d
 
     void Viewer::GetPanoRgbd(const std::string &dirName)
     {
-        pano_image = cv::imread(dirName + "pano_image.jpg");
-        pano_depth = cv::imread(dirName + "pano_depth.png", CV_LOAD_IMAGE_ANYCOLOR | CV_LOAD_IMAGE_ANYDEPTH);
+        if(dirName.back() == '/')
+        {
+            pano_image = cv::imread(dirName + "pano_image.jpg");
+            pano_depth = cv::imread(dirName + "pano_depth.png", CV_LOAD_IMAGE_ANYCOLOR | CV_LOAD_IMAGE_ANYDEPTH);
+        } else
+        {
+            pano_image = cv::imread(dirName + "/" + "pano_image.jpg");
+            pano_depth = cv::imread(dirName + "/" + "pano_depth.png", CV_LOAD_IMAGE_ANYCOLOR | CV_LOAD_IMAGE_ANYDEPTH);
+        }
+
     }
 
     void Viewer::GetTriangles()
@@ -247,7 +260,7 @@ namespace m3d
             // input
             processInput(window);
 
-            glClearColor(0.5f, 0.1f, 0.1f, 1.0f);
+            glClearColor(0.5f, 0.5f, 0.5f, 1.0f);
             glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
             // view/projection transformations
@@ -298,6 +311,11 @@ namespace m3d
             camera.ProcessKeyboard(__CameraForViewer::LEFT, deltaTime);
         if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
             camera.ProcessKeyboard(__CameraForViewer::RIGHT, deltaTime);
+
+        if(glfwGetKey(window, GLFW_KEY_UP) == GLFW_PRESS)
+            camera.ProcessKeyboard(__CameraForViewer::SPEEDUP, deltaTime);
+        if(glfwGetKey(window, GLFW_KEY_DOWN) == GLFW_PRESS)
+            camera.ProcessKeyboard(__CameraForViewer::SPEEDDOWN, deltaTime);
 
         if (glfwGetKey(window, GLFW_KEY_SPACE) == GLFW_PRESS)
             camera.Reset();

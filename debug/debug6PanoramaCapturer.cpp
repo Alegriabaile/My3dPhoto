@@ -17,28 +17,39 @@
 #include "6PanoramaCapturer.h"
 
 
-void run(int argc, char** argv);
+void myRun(const std::string appName, const std::string argv1);
+void createDir(const std::string dirName);
 
 int main(int argc, char** argv)
 {
-    run(argc, argv);
+    if(argc>2)
+        myRun(argv[0], argv[1]);
+    else
+        myRun(argv[0], "argv.txt");
+
     return 0;
 }
 
 using namespace cv;
 using namespace std;
 
-void run(int argc, char** argv)
-{
 
-//    using namespace m3d;
-    string argFileName("argv.txt");
-    if(argc>2)
-        argFileName.assign(argv[1]);
+void myRun(const string appName, const string argv1)
+{
+    std::ifstream inFile(argv1);
+    if (!inFile) {
+        printf("FrameReader::readArgv:: argv file does not exist.");
+        exit(-1);
+    }
+    string dataDir;
+    size_t state;
+    inFile >> dataDir >> state;
+    inFile.close();
+
 
     //read frame data via the path and state assigned by "argv.txt".
     vector<m3d::Frame> frames;
-    m3d::FrameReader(argFileName, frames);
+    m3d::FrameReader(dataDir, state, frames);
 
     //extract feature points and the responsible descriptors.
     m3d::FeatureExtractor::extractFeatures(frames);
@@ -52,7 +63,7 @@ void run(int argc, char** argv)
     m3d::GraphInitializer graphInitializer(frames, graph);
 
 //    m3d::DepthDeformer<2,2> depthDeformer(frames, graph, argv[0]);
-    m3d::RigidProblem rigidProblem(frames, graph, argv[0]);
+    m3d::RigidProblem rigidProblem(frames, graph, appName.c_str());
 
     //warpToPanorama
     //todo
@@ -96,32 +107,43 @@ void run(int argc, char** argv)
 
         panoDepth.convertTo(panoDepth, CV_16UC1);
 
-        std::string imgName("debug6/" + std::to_string(i) + "_th_panoImage.jpg");
-        std::string dptName("debug6/" + std::to_string(i) + "_th_pano_Depth.png");
-        std::string croppedName("debug6/" + std::to_string(i) + "_th_croppedImage.jpg");
+        createDir(dataDir + "/debug6/");
+        std::string imgName(dataDir + "/debug6/" + std::to_string(i) + "_th_pano_Image.jpg");
+        std::string dptName(dataDir + "/debug6/" + std::to_string(i) + "_th_pano_Depth.png");
+        std::string croppedName(dataDir + "/debug6/" + std::to_string(i) + "_th_cropped_Image.jpg");
         cv::imwrite(imgName, panoImage);
         cv::imwrite(dptName, panoDepth);
         cv::imwrite(croppedName, croppedImage);
 
-        imshow("croppedImage", croppedImage);
-        cv::resize(panoImage, panoImage, cv::Size(1000, 500));
-        cv::resize(panoDepth, panoDepth, cv::Size(1000, 500));
-        imshow("panoImage", panoImage);
-        imshow("panoDepth", panoDepth);
-        waitKey();
+//        imshow("croppedImage", croppedImage);
+//        cv::resize(panoImage, panoImage, cv::Size(1000, 500));
+//        cv::resize(panoDepth, panoDepth, cv::Size(1000, 500));
+//        imshow("panoImage", panoImage);
+//        imshow("panoDepth", panoDepth);
+//        waitKey();
     }
+}
 
-    //stitch panoramas to result.
-    //todo
+#include <sys/time.h>
+#include <sys/stat.h>
+#include <unistd.h>
+#include <iostream>
+#include <fstream>
 
 
-    //generate back layers.
-    //todo
+void createDir(const string dirName)
+{
+    const __mode_t fullAccess = 7 | 7<<3 | 7<<6;
 
-
-    //save, or show results.
-    //saving to jpg+png rgbd image and rendering from them is faster than rendering from .obj
-    //todo
-
+    if( 0 == access(dirName.c_str(), F_OK))
+        cout<<"Path "<<dirName<<" exists"<<endl;
+    else
+    {
+        int state = mkdir(dirName.c_str(), fullAccess);
+        if(state == 0)
+            cout<<dirName<<" : mkdir succeed!"<<endl;
+        else
+            cout<<dirName<<" : mkdir failed!"<<endl;
+    }
 }
 

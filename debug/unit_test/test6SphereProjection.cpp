@@ -5,8 +5,15 @@
 #include "6GlfwManagerForCapturer.h"
 #include "6CubemapCapturer.h"
 #include "6Cubemap2Sphere.h"
-//using namespace cv;
-//using namespace std;
+
+#include "6GlfwManagerForWarper.h"
+#include "6OpenglManagerForWarper.h"
+#include "6PanoramaWarper.h"
+using namespace cv;
+using namespace std;
+
+
+void capture(vector<float> &vertices, Mat& color, Mat& depth);
 
 int main(int argc, char** argv)
 {
@@ -60,7 +67,7 @@ int main(int argc, char** argv)
     }
 
 
-    cv::Mat color = cv::Mat(3, 4, CV_8UC3, cv::Scalar(255, 0, 0));//cv::imread("test6/cubemap.jpg");
+    cv::Mat color = cv::imread("test6/cubemap_texture.jpg");//cv::Mat(3, 4, CV_8UC3, cv::Scalar(255, 0, 0));//cv::imread("test6/cubemap.jpg");
     color.at<cv::Vec3b>(0, 1) = cv::Vec3b(0, 0, 0);//top
     color.at<cv::Vec3b>(1, 0) = cv::Vec3b(0, 255, 0);//left
     color.at<cv::Vec3b>(1, 1) = cv::Vec3b(0, 0, 255);//front
@@ -68,20 +75,27 @@ int main(int argc, char** argv)
     color.at<cv::Vec3b>(1, 3) = cv::Vec3b(0, 255, 255);//back
     color.at<cv::Vec3b>(2, 1) = cv::Vec3b(255, 255, 255);//bottom
 
-    cv::resize(color, color, cv::Size(400, 300), 0, 0, cv::INTER_NEAREST);
+//    cv::resize(color, color, cv::Size(400, 300), 0, 0, cv::INTER_NEAREST);
     cv::Mat depth = cv::Mat::eye(10, 10, CV_32FC1);
 
-    cv::imshow("color", color);
-    cv::waitKey();
+//    cv::imshow("color", color);
+//    cv::waitKey();
+    capture(vertices, color, depth);
 
-    m3d::GlfwManagerForWarper glfwManagerForWarper;
-    m3d::CubemapCapturer cubemapCapturer(200);
+    return 0;
+}
+
+void capture(vector<float> &vertices, Mat& color, Mat& depth)
+{
+    m3d::GlfwManagerForCapturer glfwManagerForCapturer;
+    m3d::CubemapCapturer cubemapCapturer(1024);
     cubemapCapturer.draw(vertices, color, depth);
 //    cubemapCapturer.showResults();
 
     cv::Mat pano_image, pano_depth;
-    m3d::Cubemap2Sphere cubemap2Sphere(200, 400);
+    m3d::Cubemap2Sphere cubemap2Sphere(1024, 2048);
     cubemap2Sphere.draw(cubemapCapturer.colorAttatches(), cubemapCapturer.depthAttatches(), pano_image, pano_depth);
     cubemap2Sphere.showResults();
-    return 0;
+
+    cv::imwrite("test6/pano_image.jpg", pano_image);
 }

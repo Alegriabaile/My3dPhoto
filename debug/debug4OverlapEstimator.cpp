@@ -21,6 +21,7 @@ using namespace cv;
 using namespace std;
 using namespace pcl;
 
+void DrawMatches(const cv::Mat &src1, const cv::Mat &src2, const std::vector<cv::KeyPoint> &kpt1, const std::vector<cv::KeyPoint> &kpt2, cv::Mat& output, std::size_t type = 1);
 void run(int argc, char** argv)
 {
 
@@ -56,6 +57,9 @@ void run(int argc, char** argv)
     bool stopFlag = false;
     for(size_t i = 0; i<sz; ++i)
     {
+//        if(!graph.activatedEdges[i])
+//            continue;
+
         const m3d::Edge &edge = graph.edges[i];
 
         string str1(frames[edge.src].imageFileName), str2(frames[edge.dst].imageFileName);
@@ -86,16 +90,58 @@ void run(int argc, char** argv)
         cout<<"\t minVal, maxVal of src: "<<minVal<<", "<<maxVal<<endl;
 
         *cloud2 += *cloud1;
+        viewer2.showCloud( cloud2 );
 
-//        cv::imshow("img1", frames[graph.edges[i].src].image);
-//        cv::imshow("img2", frames[graph.edges[i].dst].image);
-//        viewer2.showCloud( cloud2 );
-//        while( !stopFlag )
-//        {
-//            if(cv::waitKey(10) == ' ')
-//                stopFlag = true;
-//        }
-        stopFlag = false;
+
+
+        const size_t src = graph.edges[i].src;
+        const size_t dst = graph.edges[i].dst;
+
+        const std::vector<cv::KeyPoint> &srcPts = graph.edges[i].srcPts;
+        const std::vector<cv::KeyPoint> &dstPts = graph.edges[i].dstPts;
+
+        cv::Mat srcImg = frames[src].image.clone();
+        cv::Mat dstImg = frames[dst].image.clone();
+
+        cv::Mat output;
+        DrawMatches(srcImg, dstImg, srcPts, dstPts, output);
+
+        std::vector<cv::KeyPoint> srcPtsInlier1, dstPtsInlier1;
+        for(size_t k = 0; k < graph.edges[i].essentialMask1.rows; ++k)
+        {
+            if(graph.edges[i].essentialMask1.at<uchar>(k))
+            {
+                srcPtsInlier1.push_back(srcPts[k]);
+                dstPtsInlier1.push_back(dstPts[k]);
+            }
+        }
+        std::vector<cv::KeyPoint> srcPtsInlier2, dstPtsInlier2;
+        for(size_t k = 0; k < graph.edges[i].essentialMask2.rows; ++k)
+        {
+            if(graph.edges[i].essentialMask2.at<uchar>(k))
+            {
+                srcPtsInlier2.push_back(srcPts[k]);
+                dstPtsInlier2.push_back(dstPts[k]);
+            }
+        }
+
+        cv::Mat output1;
+        DrawMatches(srcImg, dstImg, srcPtsInlier1, dstPtsInlier1, output1);
+        cv::Mat output2;
+        DrawMatches(srcImg, dstImg, srcPtsInlier2, dstPtsInlier2, output2);
+
+        cout<<"\t gms_pts, inlier_pts1, inlier_pts2: "<<srcPts.size()<<", "<<srcPtsInlier1.size()<<", "<<srcPtsInlier2.size()<<std::endl;
+
+        resize(output, output, output.size()/2);
+        resize(output1, output1, output1.size()/2);
+        resize(output2, output2, output2.size()/2);
+
+        cv::imshow("output", output);
+        cv::imshow("output1", output1);
+        cv::imshow("output2", output2);
+
+        cv::waitKey();
+
         cloud1->clear();
         cloud2->clear();
     }
@@ -110,3 +156,58 @@ void run(int argc, char** argv)
     //to be continued
 }
 
+void DrawMatches(const cv::Mat &src1, const cv::Mat &src2, const std::vector<cv::KeyPoint> &kpt1, const std::vector<cv::KeyPoint> &kpt2, cv::Mat& output, std::size_t type)
+{
+    const size_t thick_line = 3;
+    const size_t radius_circle = 3;
+    const size_t thick_circle = 3;
+
+    using namespace cv;
+    using namespace std;
+    RNG rng;
+    if(src1.rows > src1.cols)
+    {
+        const int height = max(src1.rows, src2.rows);
+        const int width = src1.cols + src2.cols;
+        output = Mat(height, width, CV_8UC3, Scalar(0, 0, 0));
+        src1.copyTo(output(Rect(0, 0, src1.cols, src1.rows)));
+        src2.copyTo(output(Rect(src1.cols, 0, src2.cols, src2.rows)));
+
+        for (size_t i = 0; i < kpt1.size(); i++)
+        {
+            Point2f left = kpt1[i].pt;
+            Point2f right = (kpt2[i].pt + Point2f((float)src1.cols, 0.f));
+
+            size_t r = rng(256);
+            size_t g = rng(256);
+            size_t b = rng(256);
+            line(output, left, right, Scalar(b, g, r), thick_line);
+
+            circle(output, left, radius_circle, Scalar(b, g, r), thick_circle);
+            circle(output, right, radius_circle, Scalar(b, g, r), thick_circle);
+        }
+    } else
+    {
+        const int height = src1.rows + src2.rows;
+        const int width = max(src1.cols, src2.cols);
+        output = Mat(height, width, CV_8UC3, Scalar(0, 0, 0));
+        src1.copyTo(output(Rect(0, 0, src1.cols, src1.rows)));
+        src2.copyTo(output(Rect(0, src1.rows, src2.cols, src2.rows)));
+
+        for (size_t i = 0; i < kpt1.size(); i++)
+        {
+            Point2f left = kpt1[i].pt;
+            Point2f right = (kpt2[i].pt + Point2f(0.0f, (float)src1.rows));
+
+
+            size_t r = rng(256);
+            size_t g = rng(256);
+            size_t b = rng(256);
+            line(output, left, right, Scalar(b, g, r), thick_line);
+
+            circle(output, left, radius_circle, Scalar(b, g, r), thick_circle);
+            circle(output, right, radius_circle, Scalar(b, g, r), thick_circle);
+        }
+    }
+
+}

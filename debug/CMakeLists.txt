@@ -33,6 +33,11 @@ target_link_libraries(debug8BackLayerContentGenerator m3dbase ${OpenCV_LIBS} ${P
 add_executable(debug9Viewer debug9Viewer.cpp ${M3D_3DVIEWER_SRCS} ${M3D_GLAD_SRCS})
 target_link_libraries(debug9Viewer ${OpenCV_LIBS} glfw libGL.so)
 
+add_executable(debug10GenerateResult debug10GenerateResult.cpp ${M3D_INITIALIZER_SRCS} ${M3D_PANOCAPTURER_SRCS} ${M3D_STITCHER_SRCS} ${M3D_CONTENT_SRCS} ${M3D_GLAD_SRCS})
+target_link_libraries(debug10GenerateResult m3dbase ${OpenCV_LIBS} ${CERES_LIBRARIES} glfw libGL.so)
+
+add_executable(debug10ViewResult debug10ViewResult.cpp ${M3D_3DVIEWER_SRCS} ${M3D_GLAD_SRCS})
+target_link_libraries(debug10ViewResult ${OpenCV_LIBS} glfw libGL.so)
 # pcl error... debug...
 #add_executable(debugPclLib debugPclLib.cpp)
 #target_link_libraries(debugPclLib m3dbase ${OpenCV_LIBS} ${PCL_LIBRARIES})

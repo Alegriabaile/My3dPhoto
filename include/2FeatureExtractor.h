@@ -35,7 +35,7 @@ namespace m3d
             if(depth.empty())
                 depth = cv::Mat(size, CV_32FC1, cv::Scalar(1));
             resize(depth, depth_resize, size);
-            mask = (depth_resize > 0.0f) & mask;
+            mask = (depth_resize > 70.0f) & ( depth_resize < 20000.0f) & mask;
 
             if(state.id == 0)
             {

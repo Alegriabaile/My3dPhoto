@@ -33,7 +33,7 @@ namespace m3d {
         std::vector<m3d::Frame> &frames;
         m3d::Graph &graph;
 
-        RigidProblem(std::vector<m3d::Frame> &frames, m3d::Graph &graph, char *argv0);
+        RigidProblem(std::vector<m3d::Frame> &frames, m3d::Graph &graph, const char * const argv0);
         ~RigidProblem();
 
     private:
@@ -70,7 +70,7 @@ namespace m3d {
 
 
 //////////////////////////模板代码不能放到cpp文件中，因为其模板参数必须在编译时给出，而cpp文件在编译时已经被编译为源代码////////////////////
-    RigidProblem::RigidProblem(std::vector<m3d::Frame> &frames_, m3d::Graph &graph_, char *argv0)
+    RigidProblem::RigidProblem(std::vector<m3d::Frame> &frames_, m3d::Graph &graph_, const char * const argv0)
             : frames(frames_), graph(graph_), num_matches_(0), num_cameras_(0), camera_i_(nullptr), camera_j_(nullptr),
               matches_(nullptr), parameters_(nullptr) {
         google::InitGoogleLogging(argv0);

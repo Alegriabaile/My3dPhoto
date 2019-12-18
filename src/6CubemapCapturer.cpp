@@ -177,10 +177,12 @@ namespace m3d
                                       "uniform mat4 projection;                                       \n"
                                       "                                                               \n"
                                       "out vec2 UV;                                                   \n"
+                                      "out float Radius;                                              \n"
                                       "                                                               \n"
                                       "void main()                                                    \n"
                                       "{                                                              \n"
                                       "    vec4 position = view * model * vec4(attributePos, 1.0f);   \n"
+                                      "    Radius = length(position.xyz);                             \n"
                                       "    gl_Position = projection * position;                       \n"
                                       "                                                               \n"
                                       "    UV = vec2(attributeUV.xy);                                 \n"
@@ -189,6 +191,7 @@ namespace m3d
         std::string skyboxFragmentCode1("#version 330 core                                              \n"
                                         "                                                               \n"
                                         "in vec2 UV;                                                    \n"
+                                        "in float Radius;                                               \n"
                                         "                                                               \n"
                                         "uniform sampler2D colorTexture;                                \n"
                                         "uniform sampler2D depthTexture;                                \n"
@@ -199,7 +202,8 @@ namespace m3d
                                         "void main()                                                    \n"
                                         "{                                                              \n"
                                         "    colorAttachment = texture(colorTexture, UV.xy);            \n"
-                                        "    depthAttachment = texture(depthTexture, UV.xy);            \n"
+                                        "    //depthAttachment = texture(depthTexture, UV.xy);          \n"
+                                        "    depthAttachment = vec4(Radius, Radius, Radius, Radius);    \n"
                                         "}                                                              \n");
 
         //color
@@ -219,7 +223,7 @@ namespace m3d
         viewMats[4] = glm::rotate(viewMats[0], glm::radians(-90.0f), glm::vec3(1.0f, 0.0f, 0.0f));
         viewMats[5] = glm::rotate(viewMats[0], glm::radians(90.0f), glm::vec3(1.0f, 0.0f, 0.0f));
 
-        projectionMat = glm::perspective(glm::radians(90.0f), (float)SIDELENGTH / (float)SIDELENGTH, 0.1f, 65555.0f);//0.03m-65m
+        projectionMat = glm::perspective(glm::radians(90.0f), (float)SIDELENGTH / (float)SIDELENGTH, 0.1f, 65500.0f);//0.03m-65m
     }
 
     void CubemapCapturer::InitTextures()

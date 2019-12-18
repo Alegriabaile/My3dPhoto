@@ -124,6 +124,15 @@ namespace m3d
 
         for(size_t  i = 0; i < 3; ++i)
             transformMat[3][i] = extrinsics[3+i];
+
+        //wrong
+        //从frame.rxryrxtxtytz中恢复此图片的外参，作为model矩阵参数
+//        transformMat = glm::mat4(1.0f); // make sure to initialize matrix to identity matrix first
+//
+//        transformMat = glm::rotate(transformMat, (float)extrinsics[0], glm::vec3(1.0f, 0.0f, 0.0f));
+//        transformMat = glm::rotate(transformMat, (float)extrinsics[1], glm::vec3(0.0f, 1.0f, 0.0f));
+//        transformMat = glm::rotate(transformMat, (float)extrinsics[2], glm::vec3(0.0f, 0.0f, 1.0f));
+//        transformMat = glm::translate(transformMat, glm::vec3(extrinsics[3], extrinsics[4], extrinsics[5]));//must do translate first!!!
     }
 
     void PanoramaCapturer::GeneratePanoramasFromScenes()

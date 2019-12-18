@@ -128,7 +128,8 @@ namespace m3d {
         }
     }
 
-    void FrameReader::readData(std::string argv1, std::vector<m3d::Frame> &frames) {
+    void FrameReader::readData(const std::string argv1, std::vector<m3d::Frame> &frames)
+    {
         readArgv(argv1);
 
         std::string paramDefault;
@@ -145,9 +146,33 @@ namespace m3d {
 
         readParameters(paramFileNames, intrinDefault, frames);
     }
+    void FrameReader::readData(const std::string rootdir, const size_t state, std::vector<m3d::Frame> &frames)
+    {
+        this->dataDir.assign(rootdir);
+        this->state = state;
 
-    FrameReader::FrameReader(std::string argv1, std::vector<m3d::Frame> &frames) {
+        std::string paramDefault;
+        std::vector<std::string> imageFileNames, depthFileNames, paramFileNames;
+
+        FileNameExtractor fileNameExtractor(dataDir, imageFileNames, depthFileNames, paramFileNames, paramDefault,
+                                            state);
+
+        m3d::IntrinsicD intrinDefault;
+        readDefaultIntrinsic(paramDefault, intrinDefault);
+
+        readImages(imageFileNames, frames);
+        readDepths(depthFileNames, frames);
+
+        readParameters(paramFileNames, intrinDefault, frames);
+    }
+    FrameReader::FrameReader(const std::string argv1, std::vector<m3d::Frame> &frames) 
+    {
         readData(argv1, frames);
+    }
+
+    FrameReader::FrameReader(const std::string rootdir, const size_t state, std::vector<m3d::Frame> &frames) 
+    {
+        readData(rootdir, state, frames);
     }
 
     FrameReader::~FrameReader() {}

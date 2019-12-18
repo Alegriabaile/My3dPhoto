@@ -93,7 +93,7 @@ namespace m3d {
             if (direction == __CameraForViewer::RIGHT)
                 Position += Right * velocity;
 
-            float multi_ = 2.0f;
+            float multi_ = 1.5f;
             if (direction == __CameraForViewer::SPEEDUP)
                 MovementSpeed *= multi_;
             if (direction == __CameraForViewer::SPEEDDOWN)

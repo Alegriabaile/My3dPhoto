@@ -30,11 +30,12 @@ namespace m3d
         void readParameters(const std::vector<std::string>& paramFileNames,  m3d::IntrinsicD &defaultIntrinsicD, std::vector<m3d::Frame> &Frames);
 
         void readData(std::string argv1, std::vector<m3d::Frame> &frames);
-
-
+        void readData(const std::string rootdir, const size_t state, std::vector<m3d::Frame> &frames);
+        
     public:
         FrameReader(std::string argv1, std::vector<m3d::Frame> &frames);
-
+        FrameReader(const std::string rootdir_, const size_t state_, std::vector<m3d::Frame> &frames);
+        
         ~FrameReader();
 
     };

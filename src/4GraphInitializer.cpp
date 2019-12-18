@@ -36,6 +36,10 @@ namespace m3d
         if(deltaRotation < 0.1 || deltaRotation > 0.5)
             return false;
 
+        size_t inliersOfRecoverPose = edge.srcPts.size();
+        if(inliersOfRecoverPose < 50)
+            return false;
+
         return true;
     }
 

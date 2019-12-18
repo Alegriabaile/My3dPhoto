@@ -1,19 +1,18 @@
+/home/ale/CLionProjects/My3dPhoto/data/000i3dk2
+1
+
+/home/ale/CLionProjects/My3dPhoto/data/casual3d_data6s1
+1
+
+
+/home/ale/CLionProjects/My3dPhoto/zedDataDir/20191211-pm/20191211235834
+1
+
 /home/ale/CLionProjects/My3dPhoto/zedDataDir/20191119151552
 1
 
-/home/ale/CLionProjects/My3dPhoto/data/casual3d_data5
-1
 
-/home/ale/CLionProjects/My3dPhoto/zedDataDir/20191119151552
-1
-
-/home/ale/CLionProjects/My3dPhoto/zedDataDir/20191119150308s1
-1
-
-/home/ale/CLionProjects/My3dPhoto/zedDataDir/20191119151552s2
-1
-
-/home/ale/CLionProjects/My3dPhoto/zedDataDir/20191113171050s1
+/home/ale/CLionProjects/My3dPhoto/zedDataDir/20191211-pm/20191212010500s1
 1
 
 /home/ale/CLionProjects/My3dPhoto/data/19102111s1
@@ -21,3 +20,58 @@
 
 
 
+state==1:
+
+data/000i3dc1
+boardgames 半张椅子1
+data/000i3dc2
+
+data/000i3dk1
+实验室s1
+data/000i3dk2
+实验室
+
+boardgames 半张椅子2
+data/casual3d_data6s1
+boardgames 一张椅子
+
+data/boardgamesDSLR
+boardgames 两张椅子
+
+
+zedDataDir/20191119150617
+卓尔旁边
+zedDataDir/20191119150925
+卓尔下面小树
+zedDataDir/20191119151235
+化院旁边小树
+
+zedDataDir/20191119151552
+zedDataDir/20191119151552s1
+zedDataDir/20191119151552s2
+化院
+
+zedDataDir/20191119150308s1
+卓尔
+
+
+
+#### 20191211-pm/
+zedDataDir/20191211-pm/20191211230016
+生科院后面
+zedDataDir/20191211-pm/20191211230355
+生科院后面2
+zedDataDir/20191211-pm/20191211231402
+图书馆前面
+zedDataDir/20191211-pm/20191211232315
+万林与图书馆
+zedDataDir/20191211-pm/20191211232705
+万林下面
+zedDataDir/20191211-pm/20191211235834
+樱顶1
+zedDataDir/20191211-pm/20191212001527
+樱顶2
+zedDataDir/20191211-pm/20191212002421
+闻一多
+zedDataDir/20191211-pm/20191212010449s1
+咖啡1

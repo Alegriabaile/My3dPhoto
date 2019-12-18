@@ -17,8 +17,15 @@ target_link_libraries(test3GmsFilter ${OpenCV_LIBS})
 add_executable(test6SphereProjection test6SphereProjection.cpp
         ../../src/6CubemapCapturer.cpp
         ../../src/6Cubemap2Sphere.cpp
+        6OpenglManagerForWarper.cpp
+        6PanoramaWarper.cpp
         ${M3D_GLAD_SRCS})
 target_link_libraries(test6SphereProjection ${OpenCV_LIBS} glfw libGL.so)
 
+
+add_executable(test7Stitcher test7Stitcher.cpp
+        ../../src/6CubemapCapturer.cpp
+        ../../src/6Cubemap2Sphere.cpp)
+target_link_libraries(test7Stitcher ${OpenCV_LIBS})
 
 #add_executable(test4OverlappingPairs )
