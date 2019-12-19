@@ -30,7 +30,7 @@ namespace m3d {
         const float PITCH = 0.0f;
         const float SPEED = 100.5f;
         const float SENSITIVITY = 0.01f;
-        const float ZOOM = 45.0f;
+        const float ZOOM = 37.0f;
     }
 
 
@@ -93,13 +93,15 @@ namespace m3d {
             if (direction == __CameraForViewer::RIGHT)
                 Position += Right * velocity;
 
-            float multi_ = 1.5f;
+            const float multi_ = 1.5f;
             if (direction == __CameraForViewer::SPEEDUP)
                 MovementSpeed *= multi_;
             if (direction == __CameraForViewer::SPEEDDOWN)
                 MovementSpeed = MovementSpeed / multi_;
 
-            if (MovementSpeed < __CameraForViewer::SPEED)
+            if (MovementSpeed < __CameraForViewer::SPEED * (1e-3))
+                MovementSpeed = __CameraForViewer::SPEED;
+            if (MovementSpeed > __CameraForViewer::SPEED * (1e3))
                 MovementSpeed = __CameraForViewer::SPEED;
 
             updateCameraVectors();

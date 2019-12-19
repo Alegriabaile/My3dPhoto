@@ -38,6 +38,10 @@ target_link_libraries(debug10GenerateResult m3dbase ${OpenCV_LIBS} ${CERES_LIBRA
 
 add_executable(debug10ViewResult debug10ViewResult.cpp ${M3D_3DVIEWER_SRCS} ${M3D_GLAD_SRCS})
 target_link_libraries(debug10ViewResult ${OpenCV_LIBS} glfw libGL.so)
+
+add_executable(debug11Representation debug11Representation.cpp)
+target_link_libraries(debug11Representation ${OpenCV_LIBS})
+
 # pcl error... debug...
 #add_executable(debugPclLib debugPclLib.cpp)
 #target_link_libraries(debugPclLib m3dbase ${OpenCV_LIBS} ${PCL_LIBRARIES})
