@@ -24,7 +24,7 @@ namespace m3d
 
         void GeneratePanoramasFromScenes();
 
-        void GetPanoBoundary(const cv::Mat &depth, size_t minHwMaxHw[4]);
+        void GetPanoBoundary(m3d::Frame &frame, size_t minHwMaxHw[4]);
     public:
         PanoramaCapturer( const m3d::Graph & graph_, std::vector<m3d::Frame> & frames_);
 

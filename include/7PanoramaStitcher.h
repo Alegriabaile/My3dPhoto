@@ -18,7 +18,6 @@ namespace m3d
         m3d::Frame &result;
 
         //generate the consensus penalty.
-        void __GenerateConsensus(const cv::Mat &panoDepth1, const cv::Mat &panoDepth2, cv::Mat &panoError1, cv::Mat &panoError2);
         void GenerateRelativeConsensus(m3d::Frame &frame1, m3d::Frame &frame2);
         void GenerateConsensusPenalty();
 
@@ -30,7 +29,7 @@ namespace m3d
 
 
         //stitch with penalties.
-        void GenerateLabels();
+        void GenerateLabelsNaive();
 
         void StitchPanoramasWithPenalties();
 

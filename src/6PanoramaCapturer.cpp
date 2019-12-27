@@ -135,7 +135,7 @@ namespace m3d
 //        transformMat = glm::translate(transformMat, glm::vec3(extrinsics[3], extrinsics[4], extrinsics[5]));//must do translate first!!!
     }
 
-    void PanoramaCapturer::GetPanoBoundary(const cv::Mat &depth, size_t minHwMaxHw[4])
+    void PanoramaCapturer::GetPanoBoundary(m3d::Frame &frame, size_t minHwMaxHw[4])
     {
         if(minHwMaxHw == NULL)
         {
@@ -143,9 +143,11 @@ namespace m3d
             exit(-1);
         }
 
-        if(depth.empty())
+        cv::Mat &pano_depth = frame.pano_depth;
+
+        if(pano_depth.empty())
         {
-            std::cout<<"getPanoBoundary(): depths.empty()...\n";
+            std::cout<<"getPanoBoundary(): pano_depths.empty()...\n";
             exit(-2);
         }
 
@@ -154,14 +156,14 @@ namespace m3d
         size_t &maxH = minHwMaxHw[2];
         size_t &maxW = minHwMaxHw[3];
 
-        minH = depth.rows - 1;
-        minW = depth.cols - 1;
+        minH = pano_depth.rows - 1;
+        minW = pano_depth.cols - 1;
         maxH = maxW = 0;
-        for(size_t h = 0; h < depth.rows; ++h)
+        for(size_t h = 0; h < pano_depth.rows; ++h)
         {
-            for(size_t w = 0; w < depth.cols; ++w)
+            for(size_t w = 0; w < pano_depth.cols; ++w)
             {
-                if(!(depth.at<float>(h, w) > 0))
+                if(!(pano_depth.at<float>(h, w) > 0))
                     continue;
 
                 if(minH > h)
@@ -175,6 +177,10 @@ namespace m3d
                     maxW = w;
             }
         }
+
+        cv::Mat &pano_image = frame.pano_image;
+        pano_image = pano_image(cv::Range(minH, maxH+1), cv::Range(minW, maxW+1)).clone();
+        pano_depth = pano_depth(cv::Range(minH, maxH+1), cv::Range(minW, maxW+1)).clone();
     }
     
     void PanoramaCapturer::GeneratePanoramasFromScenes()
@@ -202,7 +208,7 @@ namespace m3d
                 cv::Mat &pano_depth = frames[i].pano_depth;
                 cubemap2Sphere.draw(colorAttaches, depthAttaches, pano_image, pano_depth);
 
-                GetPanoBoundary(pano_depth, frames[i].minHwMaxHw);
+                GetPanoBoundary(frames[i], frames[i].minHwMaxHw);
             }
     }
 

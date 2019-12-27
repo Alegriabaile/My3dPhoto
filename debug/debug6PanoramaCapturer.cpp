@@ -77,38 +77,13 @@ void myRun(const string appName, const string argv1)
             continue;
         std::cout<<i<<" th frame debug...."<<std::endl;
 
-        cv::Mat panoImage = frames[i].pano_image.clone();
-        cv::Mat panoDepth = frames[i].pano_depth.clone();
+        cv::Mat &panoImage = frames[i].pano_image;
+        cv::Mat &panoDepth = frames[i].pano_depth;
 
-        size_t minH = m3d::Frame::PANO_H - 1;
-        size_t maxH = 0;
-        size_t minW = m3d::Frame::PANO_W - 1;
-        size_t maxW = 0;
-        for(size_t h = 0; h < m3d::Frame::PANO_H; ++h)
-        {
-            for(size_t w = 0; w < m3d::Frame::PANO_W; ++w)
-            {
-                if(!(panoDepth.at<float>(h,w) > 0))
-                    continue;
-
-                if(minH > h)
-                    minH = h;
-                if(maxH < h)
-                    maxH = h;
-
-                if(minW > w)
-                    minW = w;
-                if(maxW < w)
-                    maxW = w;
-            }
-        }
-        std::cout<<"minH, maxH, minW, maxW: "<<minH<<", "<<maxH<<", "<<minW<<", "<<maxW<<std::endl;
         printf("frames[%ld].minHwMaxHw: ", i);
         for(size_t k = 0; k < 4; ++k)
             std::cout<<frames[i].minHwMaxHw[k]<<", ";
         std::cout<<std::endl<<std::endl;
-
-        cv::Mat croppedImage = panoImage(cv::Range(minH, maxH), cv::Range(minW, maxW)).clone();
 
         panoDepth.convertTo(panoDepth, CV_16UC1);
 
@@ -118,7 +93,6 @@ void myRun(const string appName, const string argv1)
         std::string croppedName(dataDir + "/debug6/" + std::to_string(i) + "_th_cropped_Image.jpg");
         cv::imwrite(imgName, panoImage);
         cv::imwrite(dptName, panoDepth);
-        cv::imwrite(croppedName, croppedImage);
 
 //        imshow("croppedImage", croppedImage);
 //        cv::resize(panoImage, panoImage, cv::Size(1000, 500));

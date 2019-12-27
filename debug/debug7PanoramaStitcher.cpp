@@ -65,97 +65,79 @@ void run(int argc, char** argv)
 
     //debug...
 
-//    for(size_t i = 0; i < frames.size(); ++i)
-//    {
-//        const cv::Mat &pano_image = frames[i].pano_image;
-//        const cv::Mat &pano_depth = frames[i].pano_depth;
-//        const cv::Mat &pano_error = frames[i].pano_error;
-//
-//        size_t minH = m3d::Frame::PANO_H - 1;
-//        size_t maxH = 0;
-//        size_t minW = m3d::Frame::PANO_W - 1;
-//        size_t maxW = 0;
-//
-//        for(size_t h = 0; h < m3d::Frame::PANO_H; ++h)
-//        {
-//            for(size_t w = 0; w < m3d::Frame::PANO_W; ++w)
-//            {
-//                if(!(pano_depth.at<float>(h,w) > 0))
-//                    continue;
-//
-//                if(minH > h)
-//                    minH = h;
-//                if(maxH < h)
-//                    maxH = h;
-//
-//                if(minW > w)
-//                    minW = w;
-//                if(maxW < w)
-//                    maxW = w;
-//            }
-//        }
-//
-//        cv::Mat image = pano_image(Range(minH, maxH), Range(minW, maxW)).clone();
-//        cv::Mat error = pano_error(Range(minH, maxH), Range(minW, maxW)).clone();
-//
-//        cv::imshow("image", image);
-//        cv::imshow("error", error/5.0f);
-//        cv::waitKey();
-//    }
+    for(size_t i = 0; i < frames.size(); ++i)
+    {
+        if(!graph.activatedFrames[i])
+            continue;
+        const cv::Mat &pano_image = frames[i].pano_image;
+        const cv::Mat &pano_depth = frames[i].pano_depth;
+        const cv::Mat &pano_error = frames[i].pano_error;
+
+        cv::imshow("image", pano_image);
+        cv::imshow("error", pano_error/5.0f);
+        cv::waitKey();
+    }
 
     std::cout<<"start debug..."<<std::endl;
 
-    size_t minH = m3d::Frame::PANO_H - 1;
-    size_t maxH = 0;
-    size_t minW = m3d::Frame::PANO_W - 1;
-    size_t maxW = 0;
-
-    for(size_t h = 0; h < m3d::Frame::PANO_H; ++h)
-    {
-        for(size_t w = 0; w < m3d::Frame::PANO_W; ++w)
-        {
-            if(!(result.pano_depth.at<float>(h,w) > 0))
-                continue;
-
-            if(minH > h)
-                minH = h;
-            if(maxH < h)
-                maxH = h;
-
-            if(minW > w)
-                minW = w;
-            if(maxW < w)
-                maxW = w;
-        }
-    }
-
-
-    std::vector<cv::Vec3b> vecColor = {cv::Vec3b(255, 0, 0), cv::Vec3b(0, 255, 0), cv::Vec3b(0, 0, 255), cv::Vec3b(255, 255, 0), cv::Vec3b(255, 0, 255),
-                                       cv::Vec3b(0, 255, 255), cv::Vec3b(128, 255, 0), cv::Vec3b(255, 128, 0), cv::Vec3b(128, 0, 255), cv::Vec3b(255, 0, 128),
-                                       cv::Vec3b(0, 128, 255), cv::Vec3b(0, 255, 128), cv::Vec3b(255, 255, 255)};
-    size_t width = maxW - minW + 1;
-    size_t height = maxH - minH + 1;
-
-    for(size_t h = 0; h < height; ++h)
-    {
-        for(size_t w = 0; w < width; ++w)
-        {
-            size_t label = result.pano_label.at<uchar>(h + minH, w + minW);
-            result.pano_label_bgr.at<cv::Vec3b>( h + minH, w + minW) = vecColor[(label)%vecColor.size()];
-        }
-    }
-
-    cv::Mat mask;
-    cv::bitwise_not(result.pano_depth>0, mask);
-    result.pano_label_bgr.setTo(cv::Vec3b(0,0,0), mask);
+//    size_t minH = m3d::Frame::PANO_H - 1;
+//    size_t maxH = 0;
+//    size_t minW = m3d::Frame::PANO_W - 1;
+//    size_t maxW = 0;
+//
+//    for(size_t h = 0; h < m3d::Frame::PANO_H; ++h)
+//    {
+//        for(size_t w = 0; w < m3d::Frame::PANO_W; ++w)
+//        {
+//            if(!(result.pano_depth.at<float>(h,w) > 0))
+//                continue;
+//
+//            if(minH > h)
+//                minH = h;
+//            if(maxH < h)
+//                maxH = h;
+//
+//            if(minW > w)
+//                minW = w;
+//            if(maxW < w)
+//                maxW = w;
+//        }
+//    }
+//
+//
+//    std::vector<cv::Vec3b> vecColor = {cv::Vec3b(255, 0, 0), cv::Vec3b(0, 255, 0), cv::Vec3b(0, 0, 255), cv::Vec3b(255, 255, 0), cv::Vec3b(255, 0, 255),
+//                                       cv::Vec3b(0, 255, 255), cv::Vec3b(128, 255, 0), cv::Vec3b(255, 128, 0), cv::Vec3b(128, 0, 255), cv::Vec3b(255, 0, 128),
+//                                       cv::Vec3b(0, 128, 255), cv::Vec3b(0, 255, 128), cv::Vec3b(255, 255, 255)};
+//    size_t width = maxW - minW + 1;
+//    size_t height = maxH - minH + 1;
+//
+//    for(size_t h = 0; h < height; ++h)
+//    {
+//        for(size_t w = 0; w < width; ++w)
+//        {
+//            size_t label = result.pano_label.at<uchar>(h + minH, w + minW);
+//            result.pano_label_bgr.at<cv::Vec3b>( h + minH, w + minW) = vecColor[(label)%vecColor.size()];
+//        }
+//    }
+//
+//    cv::Mat mask;
+//    cv::bitwise_not(result.pano_depth>0, mask);
+//    result.pano_label_bgr.setTo(cv::Vec3b(0,0,0), mask);
 
 //    cv::imshow("result: image", result.pano_image(cv::Range(minH, maxH + 1), cv::Range(minW, maxW + 1)));
 //    cv::imshow("result: depth", result.pano_depth(cv::Range(minH, maxH + 1), cv::Range(minW, maxW + 1)));
 //    cv::imshow("result: error", result.pano_error(cv::Range(minH, maxH + 1), cv::Range(minW, maxW + 1)));
 //    cv::imshow("result: label", result.pano_label(cv::Range(minH, maxH + 1), cv::Range(minW, maxW + 1))*3000);
 //    cv::waitKey();
-    cv::imwrite("debug7/result.pano_image.jpg", result.pano_image);
-    cv::imwrite("debug7/result.pano_label_bgr.jpg", result.pano_label_bgr);
+    cv::Mat pano_depth_16UC1;
+    result.pano_depth.convertTo(pano_depth_16UC1, CV_16UC1);
 
+    cv::imwrite("debug7/result.pano_image.jpg", result.pano_image);
+    cv::imwrite("debug7/result.pano_depth_16UC1.png", pano_depth_16UC1);
+    cv::imwrite("debug7/result.pano_label_bgr.jpg", result.pano_label_bgr);
+    cv::imwrite("debug7/result.pano_label.jpg", result.pano_label);
+
+    cv::imwrite("debug7/result.pano_image_cropped.jpg", result.pano_image(cv::Range(result.minH, result.maxH+1), cv::Range(result.minW, result.maxW+1)));
+    cv::imwrite("debug7/result.pano_label_bgr_cropped.jpg", result.pano_label_bgr(cv::Range(result.minH, result.maxH+1), cv::Range(result.minW, result.maxW+1)));
 }
 

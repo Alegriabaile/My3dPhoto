@@ -32,8 +32,8 @@ int main(int argc, char **argv)
         depths.push_back(depth_new);
         errors.push_back(cv::Mat());
 
-        if(errors.back().empty())
-            printf("errors[%d].empty()...\n", i);
+//        if(errors.back().empty())
+//            printf("errors[%d].empty()...\n", i);
 
 //        cv::imshow("image", image);
 //        cv::imshow("depth", depth);
