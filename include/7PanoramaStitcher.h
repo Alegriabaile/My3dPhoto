@@ -2,7 +2,7 @@
 // Created by ale on 19-12-3.
 //
 
-#ifndef MY3DPHOTO_7PANORAMASTITCHER_H
+#ifndef MY3DPHOTO_7PENALTIESGENERATOR_H
 #define MY3DPHOTO_7PANORAMASTITCHER_H
 
 #include "0m3d.h"
@@ -40,4 +40,4 @@ namespace m3d
     };
 }
 
-#endif //MY3DPHOTO_7PANORAMASTITCHER_H
+#endif //MY3DPHOTO_7PENALTIESGENERATOR_H

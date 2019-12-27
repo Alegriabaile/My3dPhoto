@@ -135,6 +135,48 @@ namespace m3d
 //        transformMat = glm::translate(transformMat, glm::vec3(extrinsics[3], extrinsics[4], extrinsics[5]));//must do translate first!!!
     }
 
+    void PanoramaCapturer::GetPanoBoundary(const cv::Mat &depth, size_t minHwMaxHw[4])
+    {
+        if(minHwMaxHw == NULL)
+        {
+            std::cout<<"getPanoBoundary(): minHwMaxHw is empty...\n";
+            exit(-1);
+        }
+
+        if(depth.empty())
+        {
+            std::cout<<"getPanoBoundary(): depths.empty()...\n";
+            exit(-2);
+        }
+
+        size_t &minH = minHwMaxHw[0];
+        size_t &minW = minHwMaxHw[1];
+        size_t &maxH = minHwMaxHw[2];
+        size_t &maxW = minHwMaxHw[3];
+
+        minH = depth.rows - 1;
+        minW = depth.cols - 1;
+        maxH = maxW = 0;
+        for(size_t h = 0; h < depth.rows; ++h)
+        {
+            for(size_t w = 0; w < depth.cols; ++w)
+            {
+                if(!(depth.at<float>(h, w) > 0))
+                    continue;
+
+                if(minH > h)
+                    minH = h;
+                if(maxH < h)
+                    maxH = h;
+
+                if(minW > w)
+                    minW = w;
+                if(maxW < w)
+                    maxW = w;
+            }
+        }
+    }
+    
     void PanoramaCapturer::GeneratePanoramasFromScenes()
     {
         m3d::GlfwManagerForCapturer glfwManagerForCapturer;
@@ -159,6 +201,8 @@ namespace m3d
                 cv::Mat &pano_image = frames[i].pano_image;
                 cv::Mat &pano_depth = frames[i].pano_depth;
                 cubemap2Sphere.draw(colorAttaches, depthAttaches, pano_image, pano_depth);
+
+                GetPanoBoundary(pano_depth, frames[i].minHwMaxHw);
             }
     }
 

@@ -18,7 +18,7 @@
 
 
 void myRun(const std::string appName, const std::string argv1);
-void createDir(const std::string dirName);
+void createDir(const std::string &dirName);
 
 int main(int argc, char** argv)
 {
@@ -103,6 +103,11 @@ void myRun(const string appName, const string argv1)
             }
         }
         std::cout<<"minH, maxH, minW, maxW: "<<minH<<", "<<maxH<<", "<<minW<<", "<<maxW<<std::endl;
+        printf("frames[%ld].minHwMaxHw: ", i);
+        for(size_t k = 0; k < 4; ++k)
+            std::cout<<frames[i].minHwMaxHw[k]<<", ";
+        std::cout<<std::endl<<std::endl;
+
         cv::Mat croppedImage = panoImage(cv::Range(minH, maxH), cv::Range(minW, maxW)).clone();
 
         panoDepth.convertTo(panoDepth, CV_16UC1);
@@ -131,7 +136,7 @@ void myRun(const string appName, const string argv1)
 #include <fstream>
 
 
-void createDir(const string dirName)
+void createDir(const string &dirName)
 {
     const __mode_t fullAccess = 7 | 7<<3 | 7<<6;
 

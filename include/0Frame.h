@@ -33,6 +33,14 @@ namespace m3d
         std::vector<cv::KeyPoint> keypoints;
         cv::Mat descriptor;
 
+
+        union {
+            size_t minHwMaxHw[4];
+            struct {
+                size_t minH, minW, maxH, maxW;
+            };
+        };
+
         cv::Mat pano_image, pano_depth, pano_error, pano_disparity;
         cv::Mat pano_image_b, pano_depth_b;
         cv::Mat pano_label, pano_label_bgr;

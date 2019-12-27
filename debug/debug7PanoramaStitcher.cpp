@@ -129,22 +129,33 @@ void run(int argc, char** argv)
         }
     }
 
-    cv::imshow("result: image", result.pano_image(cv::Range(minH, maxH + 1), cv::Range(minW, maxW + 1)));
+
+    std::vector<cv::Vec3b> vecColor = {cv::Vec3b(255, 0, 0), cv::Vec3b(0, 255, 0), cv::Vec3b(0, 0, 255), cv::Vec3b(255, 255, 0), cv::Vec3b(255, 0, 255),
+                                       cv::Vec3b(0, 255, 255), cv::Vec3b(128, 255, 0), cv::Vec3b(255, 128, 0), cv::Vec3b(128, 0, 255), cv::Vec3b(255, 0, 128),
+                                       cv::Vec3b(0, 128, 255), cv::Vec3b(0, 255, 128), cv::Vec3b(255, 255, 255)};
+    size_t width = maxW - minW + 1;
+    size_t height = maxH - minH + 1;
+
+    for(size_t h = 0; h < height; ++h)
+    {
+        for(size_t w = 0; w < width; ++w)
+        {
+            size_t label = result.pano_label.at<uchar>(h + minH, w + minW);
+            result.pano_label_bgr.at<cv::Vec3b>( h + minH, w + minW) = vecColor[(label)%vecColor.size()];
+        }
+    }
+
+    cv::Mat mask;
+    cv::bitwise_not(result.pano_depth>0, mask);
+    result.pano_label_bgr.setTo(cv::Vec3b(0,0,0), mask);
+
+//    cv::imshow("result: image", result.pano_image(cv::Range(minH, maxH + 1), cv::Range(minW, maxW + 1)));
 //    cv::imshow("result: depth", result.pano_depth(cv::Range(minH, maxH + 1), cv::Range(minW, maxW + 1)));
 //    cv::imshow("result: error", result.pano_error(cv::Range(minH, maxH + 1), cv::Range(minW, maxW + 1)));
 //    cv::imshow("result: label", result.pano_label(cv::Range(minH, maxH + 1), cv::Range(minW, maxW + 1))*3000);
-
+//    cv::waitKey();
     cv::imwrite("debug7/result.pano_image.jpg", result.pano_image);
-    cv::waitKey();
-
-
-    //generate back layers.
-    //todo
-
-
-    //save, or show results.
-    //saving to jpg+png rgbd image and rendering from them is faster than rendering from .obj
-    //todo
+    cv::imwrite("debug7/result.pano_label_bgr.jpg", result.pano_label_bgr);
 
 }
 

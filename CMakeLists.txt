@@ -80,6 +80,7 @@ file(GLOB M3D_CONTENT_SRCS
 file(GLOB M3D_3DVIEWER_SRCS
         src/9Viewer.cpp)
 
+
 # ==============================================================================
 # ==============================================================================
 # source file include environments.
@@ -94,3 +95,27 @@ include_directories("3rd/GMS-Feature-Matcher/include")
 # ==============================================================================
 # ==============================================================================
 add_subdirectory("debug/")
+
+
+
+# ==============================================================================
+# ==============================================================================
+# trial. including robust initial pose estimation, stitching, and novel view view content syn.
+option(BUILD_TRIAL "build trial parts." ON)
+
+if(BUILD_TRIAL)
+
+    set(gco_lib_srcs
+            3rd/gco-v3.0/GCoptimization.cpp
+            3rd/gco-v3.0/GCoptimization.h
+            3rd/gco-v3.0/LinkedBlockList.cpp
+            3rd/gco-v3.0/LinkedBlockList.h
+            3rd/gco-v3.0/block.h
+            3rd/gco-v3.0/energy.h
+            3rd/gco-v3.0/graph.h
+            )
+    add_library(gco ${gco_lib_srcs})
+    include_directories(3rd/gco-v3.0)
+    add_subdirectory("trial")
+
+endif(BUILD_TRIAL)
