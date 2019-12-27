@@ -11,6 +11,7 @@
 
 void getPanoBoundary(const std::vector<cv::Mat> &depths, size_t minHwMaxHw[4])
 {
+    printf("getPanoBoundary(): start...\n");
     if(minHwMaxHw == NULL)
     {
         std::cout<<"getPanoBoundary(): minHwMaxHw is empty...\n";
@@ -58,10 +59,13 @@ void getPanoBoundary(const std::vector<cv::Mat> &depths, size_t minHwMaxHw[4])
             }
         }
     }
+
+    printf("getPanoBoundary(): end...\n");
 }
 
 void getLabelsFromErrors(const std::vector<cv::Mat> &errors, const size_t *const minHwMaxHw, cv::Mat &lImage)
 {
+    printf("getLabelsFromErrors(): start...\n");
     size_t num_labels = errors.size();
     if(num_labels == 0)
     {
@@ -123,6 +127,8 @@ void getLabelsFromErrors(const std::vector<cv::Mat> &errors, const size_t *const
 
     delete [] smoothTerm;
     delete [] dataTerm;
+
+    printf("getLabelsFromErrors(): end...\n");
 }
 
 #endif //MY3DPHOTO_7LABELSFROMERRORS_H

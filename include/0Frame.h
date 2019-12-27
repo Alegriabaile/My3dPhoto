@@ -41,7 +41,7 @@ namespace m3d
             };
         };
 
-        cv::Mat pano_image, pano_depth, pano_error, pano_disparity;
+        cv::Mat pano_image, pano_depth, pano_error;
         cv::Mat pano_image_b, pano_depth_b;
         cv::Mat pano_label, pano_label_bgr;
 
