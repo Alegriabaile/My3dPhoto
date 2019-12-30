@@ -30,6 +30,7 @@ namespace m3d
 
         //stitch with penalties.
         void GenerateLabelsNaive();
+        void GenerateLabelsGco();
 
         void StitchPanoramasWithPenalties();
 

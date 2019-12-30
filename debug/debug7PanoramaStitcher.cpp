@@ -65,18 +65,18 @@ void run(int argc, char** argv)
 
     //debug...
 
-    for(size_t i = 0; i < frames.size(); ++i)
-    {
-        if(!graph.activatedFrames[i])
-            continue;
-        const cv::Mat &pano_image = frames[i].pano_image;
-        const cv::Mat &pano_depth = frames[i].pano_depth;
-        const cv::Mat &pano_error = frames[i].pano_error;
-
-        cv::imshow("image", pano_image);
-        cv::imshow("error", pano_error/5.0f);
-        cv::waitKey();
-    }
+//    for(size_t i = 0; i < frames.size(); ++i)
+//    {
+//        if(!graph.activatedFrames[i])
+//            continue;
+//        const cv::Mat &pano_image = frames[i].pano_image;
+//        const cv::Mat &pano_depth = frames[i].pano_depth;
+//        const cv::Mat &pano_error = frames[i].pano_error;
+//
+//        cv::imshow("image", pano_image);
+//        cv::imshow("error", pano_error/5.0f);
+//        cv::waitKey();
+//    }
 
     std::cout<<"start debug..."<<std::endl;
 

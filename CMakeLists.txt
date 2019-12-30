@@ -40,6 +40,19 @@ include_directories("3rd/glad/src")
 include_directories("3rd/glad/include")
 include_directories("3rd")
 
+# ==============================================================================
+# gco-v3.0
+set(gco_lib_srcs
+        3rd/gco-v3.0/GCoptimization.cpp
+        3rd/gco-v3.0/GCoptimization.h
+        3rd/gco-v3.0/LinkedBlockList.cpp
+        3rd/gco-v3.0/LinkedBlockList.h
+        3rd/gco-v3.0/block.h
+        3rd/gco-v3.0/energy.h
+        3rd/gco-v3.0/graph.h
+        )
+add_library(gco ${gco_lib_srcs})
+include_directories(3rd/gco-v3.0)
 
 
 # ==============================================================================
@@ -70,6 +83,7 @@ file(GLOB M3D_PANOCAPTURER_SRCS
 
 # m3d panorama stitcher.
 file(GLOB M3D_STITCHER_SRCS
+        src/7GcoStitchingSolver.cpp
         src/7PanoramaStitcher.cpp)
 
 # m3d panorama back layer content generator.
@@ -104,18 +118,6 @@ add_subdirectory("debug/")
 option(BUILD_TRIAL "build trial parts." ON)
 
 if(BUILD_TRIAL)
-
-    set(gco_lib_srcs
-            3rd/gco-v3.0/GCoptimization.cpp
-            3rd/gco-v3.0/GCoptimization.h
-            3rd/gco-v3.0/LinkedBlockList.cpp
-            3rd/gco-v3.0/LinkedBlockList.h
-            3rd/gco-v3.0/block.h
-            3rd/gco-v3.0/energy.h
-            3rd/gco-v3.0/graph.h
-            )
-    add_library(gco ${gco_lib_srcs})
-    include_directories(3rd/gco-v3.0)
     add_subdirectory("trial")
 
 endif(BUILD_TRIAL)

@@ -7,7 +7,8 @@
 
 #include "0m3d.h"
 
-namespace m3d {
+namespace m3d
+{
 
     class GcoStichingSolver
     {
@@ -18,7 +19,6 @@ namespace m3d {
 
         int mWidth, mHeight, mNumLabels;
         int *dataTerms, *smoothTerms;
-        GCoptimizationGridGraph *gc;
 
         std::vector<size_t> mLabel2Index;
 

@@ -25,7 +25,7 @@ add_executable(debug6PanoramaCapturer debug6PanoramaCapturer.cpp ${M3D_INITIALIZ
 target_link_libraries(debug6PanoramaCapturer m3dbase ${OpenCV_LIBS} ${PCL_LIBRARIES} ${CERES_LIBRARIES} glfw libGL.so)
 
 add_executable(debug7PanoramaStitcher debug7PanoramaStitcher.cpp ${M3D_INITIALIZER_SRCS} ${M3D_PANOCAPTURER_SRCS} ${M3D_STITCHER_SRCS} ${M3D_GLAD_SRCS} )
-target_link_libraries(debug7PanoramaStitcher m3dbase ${OpenCV_LIBS} ${PCL_LIBRARIES} ${CERES_LIBRARIES} glfw libGL.so)
+target_link_libraries(debug7PanoramaStitcher m3dbase ${OpenCV_LIBS} ${PCL_LIBRARIES} ${CERES_LIBRARIES} glfw libGL.so gco)
 
 add_executable(debug8BackLayerContentGenerator debug8BackLayerContentGenerator.cpp ${M3D_INITIALIZER_SRCS} ${M3D_PANOCAPTURER_SRCS} ${M3D_STITCHER_SRCS} ${M3D_CONTENT_SRCS} ${M3D_GLAD_SRCS})
 target_link_libraries(debug8BackLayerContentGenerator m3dbase ${OpenCV_LIBS} ${PCL_LIBRARIES} ${CERES_LIBRARIES} glfw libGL.so)

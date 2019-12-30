@@ -3,6 +3,7 @@
 //
 #include "1Logger.h"
 #include "7PanoramaStitcher.h"
+#include "7GcoStitchingSolver.h"
 
 namespace m3d
 {
@@ -24,7 +25,8 @@ namespace m3d
 
     void PanoramaStitcher::StitchPanoramasWithPenalties()
     {
-        GenerateLabelsNaive();
+//        GenerateLabelsNaive();
+        GenerateLabelsGco();
     }
 
     void PanoramaStitcher::GenerateRelativeConsensus(m3d::Frame &frame1, m3d::Frame &frame2)
@@ -156,6 +158,7 @@ namespace m3d
 
     }
 
+    //approx-generate the boundary penalty...
     void PanoramaStitcher::GenerateBoundaryPenalty()
     {
         size_t sz = frames.size();
@@ -170,7 +173,7 @@ namespace m3d
             //(maxH - minH + 1, maxW - minW + 1, CV_32FC1, cv::Scalar(1.0f));
             size_t cols = error.cols;
             size_t rows = error.rows;
-            float scale_min = 0.05f;
+            float scale_min = 0.10f;//
             float scale_max = 1.0f - scale_min*2.0f;
             cv::Rect roi(cols*scale_min, rows*scale_min, cols*scale_max, rows*scale_max);
             error(roi).setTo(0.0f);
@@ -252,7 +255,25 @@ namespace m3d
         result.pano_label.setTo(255, mask);
     }
 
+    void PanoramaStitcher::GenerateLabelsGco()
+    {
+        //debug...
+//        for(size_t i = 0; i < frames.size(); ++i)
+//        {
+//            if(!activatedFrames[i])
+//                continue;
+//            const cv::Mat &pano_image = frames[i].pano_image;
+//            const cv::Mat &pano_depth = frames[i].pano_depth;
+//            const cv::Mat &pano_error = frames[i].pano_error;
+//
+//            cv::imshow("image", pano_image);
+//            cv::imshow("error", pano_error/5.0f);
+//            cv::waitKey();
+//        }
 
+
+        m3d::GcoStichingSolver gcoStichingSolver(activatedFrames, frames, result);
+    }
 
 
 }
