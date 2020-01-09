@@ -23,10 +23,10 @@ namespace m3d
         std::vector<size_t> mLabel2Index;
 
         bool initialize();
-        void solve(int num_iters = 10);
+        void solve(int num_iters = 15);
         void update();
     public:
-        GcoStichingSolver(const std::vector<bool> &activatedFrames, const std::vector<m3d::Frame> &frames, m3d::Frame &result);
+        GcoStichingSolver(const std::vector<bool> &activatedFrames, const std::vector<m3d::Frame> &frames, m3d::Frame &result, int iter = 15);
         ~GcoStichingSolver();
     };
 

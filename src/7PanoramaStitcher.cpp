@@ -271,8 +271,8 @@ namespace m3d
 //            cv::waitKey();
 //        }
 
-
-        m3d::GcoStichingSolver gcoStichingSolver(activatedFrames, frames, result);
+        int iter = 15;
+        m3d::GcoStichingSolver gcoStichingSolver(activatedFrames, frames, result, iter);
     }
 
 

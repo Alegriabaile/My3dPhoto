@@ -2,6 +2,7 @@
 // Created by ale on 19-12-16.
 //
 
+#include <7GcoStitchingSolver.h>
 #include "0m3d.h"
 #include "1FrameReader.h"
 #include "2FeatureExtractor.h"
@@ -148,10 +149,15 @@ void myCompute(const string appName, const string rootDir, const size_t state, m
     m3d::RigidProblem rigidProblem(frames, graph, appName.c_str());
 
     //warpToPanorama
+    printf("start panoramaCapturer\n");
     m3d::PanoramaCapturer panoramaCapturer(graph, frames);
+    printf("finish panoramaCapturer\n");
 
     //stitch panoramas to result.
+
+    printf("start gcoStichingSolver\n");
     m3d::PanoramaStitcher(graph.activatedFrames, frames, result);
+    printf("finish gcoStichingSolver\n");
 
 }
 

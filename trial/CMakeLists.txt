@@ -11,3 +11,7 @@ target_link_libraries(testMultiband ${OpenCV_LIBS})
 # test multiband1. codes from csdn-blog
 add_executable(testMultiband1 testMultiband1.cpp)
 target_link_libraries(testMultiband1 ${OpenCV_LIBS})
+
+# test costfunctor of gco.
+add_executable(testCostFunctor testCostFunctor.cpp)
+target_link_libraries(testCostFunctor gco ${OpenCV_LIBS})

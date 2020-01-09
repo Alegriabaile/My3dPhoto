@@ -6,7 +6,7 @@
 #include "GCoptimization.h"
 namespace m3d
 {
-    GcoStichingSolver::GcoStichingSolver(const std::vector<bool>& activatedFrames_, const std::vector<m3d::Frame> &frames_, m3d::Frame &result_)
+    GcoStichingSolver::GcoStichingSolver(const std::vector<bool>& activatedFrames_, const std::vector<m3d::Frame> &frames_, m3d::Frame &result_, int iter)
     : activatedFrames(activatedFrames_), frames(frames_), result(result_)
     , dataTerms(NULL), smoothTerms(NULL)
     {
@@ -16,7 +16,7 @@ namespace m3d
             exit(-1);
         };
 
-        solve(20);
+        solve(iter);
     }
 
     GcoStichingSolver::~GcoStichingSolver()

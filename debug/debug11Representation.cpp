@@ -11,7 +11,7 @@ void cropTheFullScreenVideo()
 {
     std::string videoName("debug11/");
 
-    for(size_t i = 1; i<=4; ++i)
+    for(size_t i = 5; i<=5; ++i)
     {
         std::string index(std::to_string(i));
         VideoCapture capture(videoName + index + ".mp4");
@@ -20,7 +20,7 @@ void cropTheFullScreenVideo()
 
         Mat frame;
         Mat frame_cropped;
-        size_t wLength = 76, hLength = 85;
+        size_t wLength = 153, hLength = 162;
         while(capture.read(frame))
         {
             frame_cropped = frame(Range(hLength, hLength + 600), Range(wLength, wLength + 800)).clone();
