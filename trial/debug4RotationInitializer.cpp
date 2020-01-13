@@ -1,14 +1,13 @@
 //
-// Created by ale on 19-11-25.
+// Created by ale on 20-1-9.
 //
-
 #include "0m3d.h"
 #include "1FrameReader.h"
 #include "2FeatureExtractor.h"
 #include "3FeatureMatcher.h"
 #include "4OverlapEstimator.h"
 #include "4GraphInitializer.h"
-
+#include "4RotationInitializer.h"
 
 void run(int argc, char** argv);
 
@@ -18,7 +17,7 @@ int main(int argc, char** argv)
     return 0;
 }
 
-#include "backProject2PclPc.h"
+#include "../debug/backProject2PclPc.h"
 using namespace cv;
 using namespace std;
 using namespace pcl;
@@ -47,8 +46,9 @@ void run(int argc, char** argv)
 
 
 
-    std::cout<<"start GraphInitializer..."<<std::endl;
-    m3d::GraphInitializer graphInitializer(frames, graph);
+    std::cout<<"start RotationInitializer..."<<std::endl;
+    m3d::RotationInitializer rotationInitializer(frames, graph);
+
 
 
     std::cout<<"start debug..."<<std::endl;
@@ -103,11 +103,11 @@ void run(int argc, char** argv)
         cv::waitKey(3000);
         viewer.showCloud(cloud1);
     }
-    
+
     while(!viewer.wasStopped())
         ;
     cloud1->clear();
-    
+
     //no linear optimization of global pose
     //todo
 
@@ -116,4 +116,5 @@ void run(int argc, char** argv)
 
     //to be continued
 }
+
 

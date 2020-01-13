@@ -198,7 +198,6 @@ namespace m3d
         mstVertices.insert(dst);
         m3d::RelativeToGlobal(frames[dst].extrinsicD.transform(), mstEdges[0].rts, frames[src].extrinsicD.transform(), true);
 
-        //todo
         //add all edges to global graph.
         while(mstVertices.size() < vsz)
         {

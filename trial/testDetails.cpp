@@ -42,8 +42,14 @@ int main()
     cv::Mat result = cv::Mat(image.size(), CV_8UC3, cv::Scalar(0, 0, 0));
     result.setTo(cv::Scalar(0, 0, 255));
     cv::bitwise_and(image, image, result, mask);
-    cv::imshow("result", result);
-
+    cv::imshow("result", result);    
+    
+    cv::Mat testTranspose = image.clone();
+    cv::imshow("transpose-original", testTranspose);
+    cv::transpose(testTranspose, testTranspose);
+    cv::imshow("transpose-transposed", testTranspose);
+    
+    
     cv::waitKey();
 
     return 0;
