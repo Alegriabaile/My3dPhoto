@@ -45,7 +45,6 @@ void run(int argc, char** argv)
     m3d::OverlapEstimator overlapEstimator(frames, graph);
 
 
-
     std::cout<<"start RotationInitializer..."<<std::endl;
     m3d::RotationInitializer rotationInitializer(frames, graph);
 

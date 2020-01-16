@@ -25,6 +25,7 @@ namespace m3d
         bool IsActiveEdge(const m3d::Edge &edge);
         void ActivateEdges();
 
+        void DiscreteLabel2Rodrigues(std::vector<size_t> &labels, size_t height, size_t width, std::vector<m3d::Frame*> &pFrames);
         void SolveRotationLabelling();
         void GenInitialRotations();
 

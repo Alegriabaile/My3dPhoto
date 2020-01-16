@@ -75,6 +75,7 @@ void run(int argc, char** argv)
     const std::vector<bool> &activatedFrames = graph.activatedFrames;
     const size_t sz = frames.size();
     PointCloud<PointXYZRGBA>::Ptr cloud1( new PointCloud<PointXYZRGBA>);
+    cv::imshow("control", cv::Mat(1000, 1000, CV_8UC3, cv::Scalar(255,255,255)));
     for(size_t i = 0; i<sz; ++i)
     {
         if(!activatedFrames[i])
@@ -107,7 +108,27 @@ void run(int argc, char** argv)
     while(!viewer.wasStopped())
         ;
     cloud1->clear();
-    
+
+    printf("absolute rts:\n");
+    for(size_t k = 0; k < frames.size(); ++k)
+    {
+        printf("%ld ", k);
+        for(size_t i = 0; i < 6; ++i)
+            printf("%lf, ", frames[k].extrinsicD.rts[i]);
+        printf("\n");
+    }
+    printf("relative rts:\n");
+    for(size_t k = 0; k < graph.edges.size(); ++k)
+    {
+        if(!graph.activatedEdgesMst[k])
+            continue;
+        int src = graph.edges[k].src;
+        int dst = graph.edges[k].dst;
+        printf("%d %d ", src, dst);
+        for(size_t i = 0; i < 6; ++i)
+            printf("%lf, ", graph.edges[k].rts[i]);
+        printf("\n");
+    }
     //no linear optimization of global pose
     //todo
 

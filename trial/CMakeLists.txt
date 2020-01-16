@@ -1,5 +1,4 @@
 
-
 # find_package(OpenCV REQUIRED)
 add_executable(testStitchViaGco testStitchViaGco.cpp 7PenaltiesGenerator.cpp)
 target_link_libraries(testStitchViaGco gco ${OpenCV_LIBS})
@@ -16,6 +15,9 @@ target_link_libraries(testMultiband1 ${OpenCV_LIBS})
 add_executable(testCostFunctor testCostFunctor.cpp)
 target_link_libraries(testCostFunctor gco ${OpenCV_LIBS})
 
+# test rotation cost functor.
+add_executable(testRotations testRotations.cpp)
+target_link_libraries(testRotations m3dbase ${OpenCV_LIBS} ${PCL_LIBRARIES})
 
 # test #define and typedef
 add_executable(debug4RotationInitializer debug4RotationInitializer.cpp 4RotationInitializer.cpp  ${M3D_INITIALIZER_SRCS})
